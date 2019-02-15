@@ -1,0 +1,53 @@
+{% extends 'molecules/base.html' %}
+
+{% block content %}
+    <div class="jumbotron">
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h4><b>Query creator</b></h4>
+
+                <form method="get">
+                    {{ filter.form.as_p }}
+
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2" style="margin-top:2px">
+
+                {% if filter %}
+                <table class="table table-bordered" style="width:80%" align="left">
+                    <thread>
+                        <tr>
+                            <td>PDB ID</td>
+                            <td>Resolution</td>
+                            <td>BTime</td>
+                            <td>Release</td>
+                            <td>Protein name</td>
+                        </tr>
+                    </thread>
+                        <tbody>
+                            {% for files in filter.qs %}
+                            <tr>
+                                <td><a href="{% url 'molecules:details' files.pdb_id %}">{{files.pdb_id}}</a></td>
+                                <td>{{files.resolution}}</td>
+                                <td>{{files.residence_time|floatformat:2}}</td>
+                                <td>{{files.release_year}}</td>
+                                <td>{{files.protein_name}}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            No files available
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="{% url 'molecules:export_database_csv' %}">Export database</a>
+        </div>
+
+    </div>
+
+{% endblock %}

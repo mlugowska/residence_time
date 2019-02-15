@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+     <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">PDBrt</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="{% url 'molecules:index' %}">Home</a></li>
+                <li><a href="#">Details</a></li>
+                <li><a href="{% url 'molecules:sources' %}">Database</a></li>
+                {% if user.is_authenticated%}
+                    <li><a href="{% url 'molecules:add_form' %}">Add</a></li>
+                {% endif %}
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'molecules:logout' %}"><span class="glyphicon glyphicon-off"></span> Logout {{user.username}}</a></li>
+                {% else %}
+                    <li><a href="{% url 'molecules:signup' %}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                    <li><a href="{% url 'molecules:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                {% endif %}
+            </ul>
+
+        </div>
+    </nav>
+        <main>
+          {% block content %}
+          {% endblock %}
+        </main>
+</body>
+</html>

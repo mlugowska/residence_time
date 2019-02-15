@@ -1,3 +1,5 @@
 from django.contrib import admin
+from molecules.models import Complex
 
-# Register your models here.
+
+admin.site.register(Complex)
