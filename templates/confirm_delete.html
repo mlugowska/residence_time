@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="jumbotron" align="center">
+    </div>
+    <center>
+        <form method="post">{% csrf_token %}
+            <p>Are you sure you want to delete "{{ object.pdb_id }}"?</p>
+            <input type="submit" value="Confirm">
+            <button type="cancel" onclick="window.location='{% url 'molecules:complex-list' %}';return false;">Cancel</button>
+        </form>
+    </center>
+{% endblock %}

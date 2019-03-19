@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<style>
+    .label_text {
+        background-color: #dce8e6;
+        width: 40%;
+    }
+    .value_text {
+        background-color: #ceddd9;
+        max-width: 300px;
+    }
+    .mol-container {
+        width: 100%;
+        height: 400px;
+        position: relative;
+    }
+    .container-fluid {
+        padding: 60px 50px;
+    }
+    #inchi {
+        max-width: 300px;
+        max-height: 300px;
+    }
+    #smile {
+        max-width: 300px;
+        max-height: 300px;
+    }
+    #link {
+        max-width: 300px;
+        word-wrap: break-word;
+    }
+    </style>
+{% block script %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $( function() {
+            $( ".datepicker" ).datepicker();
+        } );
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+</div>
+    <form action="{% url 'molecules:update' object.pdb_id %}" method="post">
+    {% csrf_token %}
+     <div class="col-lg-4" style="background-color:#f1f1f1; box-shadow:0 2px 4px 0">
+            <table class="table" style="width:80%" align="left">
+{#                {{ form.as_table }}#}
+                {% render_form serializer.as_table %}
+                <tr><td colspan="2"><br></td></tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Submit">
+                    </td>
+                </tr>
+            </table>
+          </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="jumbotron">
+    </div>
+    <div class="container-fluid">
+        <div class="jumbotron text-center">
+            <form class="form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
+                <p>PDB Residence Time</p>
+                <input class="form-control" name="search" type="text" placeholder="Search" size="30" required>
+                <button class="btn btn-outline-success  my-2 my-sm-0" type="submit">Go</button>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2" style="margin-top:2px">
+                {% if object_list %}
+                    <table class="table table-bordered" style="width:80%" align="center">
+                        <tr>
+                            <td>PDB ID</td>
+                            <td>Protein</td>
+                            <td>Ligand</td>
+                            <td>Residence Time</td>
+                        </tr>
+                        <tbody>
+                        {% for object in object_list %}
+                            <tr>
+                                <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
+                                </td>
+                                <td>{{ object.protein.pdb_id }}</td>
+                                <td>{{ object.ligand.pdb_id }}</td>
+                                <td>{{ object.residence_time|floatformat:2 }}</td>
+                                {% if user.is_superuser %}
+                                    <td><a href="{% url 'molecules:delete' object.pdb_id %}"><i class="fa fa-trash"></i>Delete</a></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    {{ no_objects }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
