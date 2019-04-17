@@ -1,5 +1,5 @@
-from django import forms
-from django.forms import ModelForm
+from typing import Dict
+
 from rest_framework import serializers
 
 from molecules.models import Ligand, Protein, Complex
@@ -18,24 +18,42 @@ class ProteinSerializer(serializers.ModelSerializer):
 
 
 class ComplexSerializer(serializers.ModelSerializer):
-    ligand = LigandSerializer()
-    protein = ProteinSerializer()
+    ligand_name = serializers.CharField(source='ligand.name', required=False)
+    ligand_inchi = serializers.CharField(source='ligand.inchi', required=False)
+    ligand_smiles = serializers.CharField(source='ligand.smiles', required=False)
+    ligand_formula = serializers.CharField(source='ligand.formula', required=False)
+    ligand_file = serializers.FileField(source='ligand.file', required=False)
+
+    protein_name = serializers.CharField(source='protein.name', required=False)
+    protein_organism = serializers.CharField(source='protein.organism', required=False)
+    protein_file = serializers.FileField(source='protein.file', required=False)
 
     class Meta:
         model = Complex
-        fields = '__all__'
+        fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'ligand_file',
+                  'protein_name', 'protein_organism', 'protein_file', 'name', 'pdb_id', 'file',
+                  'release_year', 'primary_reference', 'residence_time', 'residence_time_plus_minus', 'ki', 'kon',
+                  'koff', 'ki_plus_minus', 'koff_plus_minus', 'kon_ten_to_power',)
 
-    def create(self, validated_data):
-        ligand, created = Ligand.objects.get_or_create(**validated_data.pop('ligand'))
-        protein, created = Protein.objects.get_or_create(**validated_data.pop('protein'))
-        return Complex.objects.create(ligand=ligand, protein=protein, **validated_data)
+    @staticmethod
+    def _create_ligand(ligand_data: Dict):
+        return Ligand.objects.create(**ligand_data)
 
-    def update(self, instance, validated_data):
+    @staticmethod
+    def _create_protein(protein_data: Dict):
+        return Protein.objects.create(**protein_data)
+
+    def create(self, validated_data: Dict):
+        ligand = None
+        protein = None
         if validated_data.get('ligand'):
             ligand_data = validated_data.pop('ligand')
-            Ligand.objects.filter(pk=instance.ligand.pk).update(**ligand_data)
-
+            ligand = self._create_ligand(ligand_data)
         if validated_data.get('protein'):
             protein_data = validated_data.pop('protein')
-            Protein.objects.filter(pk=instance.protein.pk).update(**protein_data)
-        return super().update(instance, validated_data)
+            protein = self._create_protein(protein_data)
+
+        return Complex.objects.create(ligand=ligand, protein=protein, **validated_data)
+
+# deskryptory molekularne jak korelują z czasem rezydencji (deskryptory: rdkit -> na podstawie struktury obliczyć
+# liczbę jakoś, która coś określa) ZROBIĆ

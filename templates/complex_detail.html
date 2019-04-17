@@ -108,22 +108,36 @@
                     </tr>
                     <tr>
                         <td>PDB ID</td>
-                        <td><a href="{% url 'molecules:complex-download' object.pdb_id %}">{{ object.pdb_id }}</a></td>
+                        <td>
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}">{{ object.pdb_id }}</a>
+                        </td>
                     </tr>
                     <tr>
                         <td>Protein Name</td>
-                        <td><a href="{% url 'molecules:complex-download' object.pdb_id %}">{{ object.protein.name }}</a></td>
+                        <td>
+                            {% if object.protein.name %}
+                                <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <td>Ligand Name</td>
-                        <td>{{ object.ligand.name }}</td>
+                        <td>
+                            {% if object.ligand.name %}
+                                <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
-                        <td>Residence time</td>
+                        <td>Residence time [min]</td>
                         {% if object.residence_time > 0.0 %}
-                            {% if object.residence_time_minus > 0.0 %}
+                            {% if object.residence_time_plus_minus > 0.0 %}
                                 <td>{{ object.residence_time.normalize }} &#177
-                                    {{ object.residence_time_plus_minus.normalize }} [min]
+                                    {{ object.residence_time_plus_minus.normalize }}
                                 </td>
                             {% else %}
                                 <td>{{ object.residence_time.normalize }}</td>
@@ -164,11 +178,7 @@
                         <td>K<sub>off</sub></td>
                         {% if object.koff > 0.0 %}
                             {% if object.koff_plus_minus > 0.0 %}
-                                <td>{{ object.koff.normalize }} &#177
-                                    {{ object.koff_plus_minus.normalize }}</td>
-                            {% else %}
-                                <td>{{ object.koff.normalize }}</td>
-                            {% endif %}
+                                `    {% endif %}
                         {% else %}
                             <td>-</td>
                         {% endif %}
@@ -177,22 +187,17 @@
                         <td colspan="2" class="label_text"><b>Ligand Properties</b></td>
                     </tr>
                     <tr>
-                        <td>ID</td>
-                        <td>
-                            <a href="{% url 'molecules:complex-download' object.ligand.pdb_id %}">{{ object.ligand.pdb_id }}</a>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Formula</td>
                         <td>{{ object.ligand.formula }}</td>
+
                     </tr>
                     <tr>
                         <td>Canonical SMILES</td>
-                        <td><textarea>{{ object.ligand.smiles }}</textarea></td>
+                        <td><textarea readonly>{{ object.ligand.smiles }}</textarea></td>
                     </tr>
                     <tr>
-                        <td>InChi Key</td>
-                        <td><textarea>{{ object.ligand.inchi }}</textarea></td>
+                        <td>InChi String</td>
+                        <td><textarea readonly>{{ object.ligand.inchi }}</textarea></td>
                     </tr>
                 </table>
             </form>

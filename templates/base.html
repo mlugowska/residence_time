@@ -35,12 +35,14 @@
         <ul class="nav navbar-nav">
             {% if user.is_authenticated %}
                 <li><a href="{% url 'molecules:complex-add' %}">Add</a></li>
+                <li><a href="{% url 'molecules:complex-import-data' %}">Upload from XLS</a></li>
             {% endif %}
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
-                <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span> Logout {{ user.username }}</a></li>
+                <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
+                    Logout {{ user.username }}</a></li>
             {% else %}
                 <li><a href="{% url 'users:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
             {% endif %}

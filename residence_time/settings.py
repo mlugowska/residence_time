@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_swagger',
+    'import_export',
+    # 'rest_framework_swagger',
     'molecules'
 ]
 
@@ -79,8 +80,12 @@ WSGI_APPLICATION = 'residence_time.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'residence_time',
+        'USER': 'rt_user',
+        'PASSWORD': 'rt_password',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -134,3 +139,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = '/'
 
 APPEND_SLASH = True
+IMPORT_EXPORT_USE_TRANSACTIONS = True

@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from molecules.models import Protein, Complex, Ligand
+
+admin.site.register(Protein)
+admin.site.register(Ligand)
+admin.site.register(Complex)
