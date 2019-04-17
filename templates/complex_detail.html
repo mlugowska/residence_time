@@ -18,11 +18,6 @@
         width: 5%;
     }
 
-    .value_text {
-        background-color: #ceddd9;
-        max-width: 300px;
-    }
-
     .mol-container {
         width: 100%;
         height: 400px;
@@ -31,21 +26,6 @@
 
     .container-fluid {
         padding: 60px 50px;
-    }
-
-    #inchi {
-        max-width: 300px;
-        max-height: 300px;
-    }
-
-    #smile {
-        max-width: 300px;
-        max-height: 300px;
-    }
-
-    #link {
-        max-width: 300px;
-        word-wrap: break-word;
     }
 
     .table {
@@ -83,22 +63,22 @@
         <div class="col-lg-4 col-lg-offset-2" style="background-color:#f1f1f1">
             <h2> {{ object.name }} </h2>
 
-            <div id="container-01" class="mol-container"></div>
-            <div id="view_modyficators">
+            <div id="container-01" class="viewer_3Dmoljs"></div>
+            <hr style="margin: 0;">
 
-                <br>
-                <input type="button" value="Stick"
-                       onclick="$3Dmol.viewers['container-01'].setStyle({},{stick:{}}); $3Dmol.viewers['container-01'].render();">
-                <input type="button" value="Line" onclick="viewer.setStyle({},{line:{}}); viewer.render();">
-                <input type="button" value="Cross"
-                       onclick="viewer.setStyle({},{cross:{linewidth:2}}); viewer.render();">
-                <input type="button" value="Sphere" onclick="viewer.setStyle({},{sphere:{}}); viewer.render();">
-                <input type="button" value="Cartoon"
-                       onclick="viewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); viewer.render();">
-                <input type="button" value="Label alpha C's" onclick="addLabels(viewer); viewer.render();">
-
-            </div>
+            <br>
+            <input type="button" value="Stick"
+                   onclick="v.setStyle({},{stick:{}}); v.render();">
+            <input type="button" value="Line" onclick="viewer.setStyle({},{line:{}}); viewer.render();">
+            <input type="button" value="Cross"
+                   onclick="viewer.setStyle({},{cross:{linewidth:2}}); viewer.render();">
+            <input type="button" value="Sphere" onclick="viewer.setStyle({},{sphere:{}}); viewer.render();">
+            <input type="button" value="Cartoon"
+                   onclick="viewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); viewer.render();">
+            <input type="button" value="Label alpha C's" onclick="addLabels(viewer); viewer.render();">
         </div>
+
+
         <div class="col-lg-4" style="background-color:#f1f1f1">
             <form method="get" action="{% url 'molecules:complex-detail' object.pdb_id %}">
                 {% csrf_token %}
@@ -211,18 +191,15 @@
         let element = $('#container-01');
         let config = {backgroundColor: 'black'};
         let viewer = $3Dmol.createViewer(element, config);
-        viewer = $3Dmol.createViewer("container-01", {defaultcolors: $3Dmol.rasmolElementColors});
-        viewer.setBackgroundColor(0x000000);
-        var pdbUri = '/media/complexes/{{ object.pdb_id }}.pdb';
+        let pdbUri = '/media/complexes/{{ object.pdb_id }}.pdb';
 
         jQuery.ajax(pdbUri, {
             success: function (data) {
-                let v = viewer;
-                v.addModel(data, "pdb");                       /* load data */
-                v.setStyle({}, {cartoon: {color: 'spectrum'}});  /* style all atoms */
-                v.zoomTo();                                      /* set camera */
-                v.render();                                      /* render scene */
-                /*v.zoom(1.2, 1000);*/                               /* slight zoom */
+                viewer.addModel(data, "pdb");                       /* load data */
+                viewer.setStyle({}, {cartoon: {color: 'spectrum'}});  /* style all atoms */
+                viewer.zoomTo();                                      /* set camera */
+                viewer.render();                                      /* render scene */
+                viewer.zoom(1.2, 1000);                              /* slight zoom */
             },
             error: function (hdr, status, err) {
                 console.error("Failed to load PDB " + pdbUri + ": " + err);
