@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'import_export',
     # 'rest_framework_swagger',
-    'molecules'
+    'molecules',
+    'pdbs'
 ]
 
 MIDDLEWARE = [
