@@ -3,7 +3,7 @@ import os
 from django.conf import settings
 
 from molecules.models import Complex
-from pdbs.download_pdb_files import download_complex_file
+from pdbs.download_complex_pdb_files import download_complex_file
 from pdbs.parse_complexes_filenames import change_complex_filename
 
 DIR = 'complexes'
@@ -23,4 +23,3 @@ def update_complex_file():
         if not instance.file:
             instance.file = os.path.join(settings.MEDIA_ROOT, DIR, file)
             instance.save()
-            import pdb; pdb.set_trace()

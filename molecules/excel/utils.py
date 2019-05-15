@@ -10,7 +10,7 @@ def binary_excel_to_df(binary):
     while as default 'C' engine might raise exceptions in some cases
     """
     binary_stream = io.BytesIO(binary)
-    return pd.read_excel(binary_stream)
+    return pd.read_excel(binary_stream, converters={"% Chg": str})
 
 
 def df_to_dataset(df: pd.DataFrame, **kwargs):

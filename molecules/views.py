@@ -15,11 +15,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from molecules.excel.resources import ComplexResource
-from molecules.excel.update_instance_from_import import update_complex_file
+from pdbs.create_protein_ligand_files import split_complex_file
+from pdbs.update_complex_pdb_file import update_complex_file
 from molecules.excel.utils import binary_excel_to_df, df_to_dataset
 from molecules.models import Complex
 from molecules.serializers import ComplexSerializer
-from utils.get_files import download_file, create_dir_with_structure_files
+from utils.get_files_to_zip import download_file, create_dir_with_structure_files
 from utils.media_renderer import PassthroughRenderer
 
 
@@ -89,10 +90,11 @@ class ComplexViewSet(viewsets.ModelViewSet):
             df = binary_excel_to_df(excel_data)
             dataset = df_to_dataset(df)
 
-            result = ComplexResource().import_data(dataset, dry_run=True)
+            result = ComplexResource().import_data(dataset, dry_run=False)
             if not result.has_errors():
                 ComplexResource().import_data(dataset, dry_run=False)
                 update_complex_file()
+                split_complex_file()
                 return HttpResponseRedirect(redirect_to=reverse('molecules:complex-list'))
 
         return Response(template_name='import.html')

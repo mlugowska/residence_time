@@ -47,9 +47,12 @@ class Complex(models.Model):
     kon_ten_to_power = models.DecimalField(max_digits=2, decimal_places=0, default=0)
 
     def delete(self, using=None, keep_parents=False):
-        self.file.delete()
-        self.ligand.delete()
-        self.protein.delete()
+        if self.file:
+            self.file.delete()
+        if self.ligand:
+            self.ligand.delete()
+        if self.protein:
+            self.protein.delete()
         super().delete(using=None, keep_parents=False)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

@@ -7,3 +7,4 @@ django-import-export
 pandas
 numpy
 tablib
+biopython
