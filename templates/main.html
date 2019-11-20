@@ -13,10 +13,10 @@
         </div>
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2" style="margin-top:2px; text-align: right;">
+                <form action="{% url 'molecules:complex-export-data' %}" method="get">
+                    <button type="submit">Export to XLS</button>
+                </form>
                 {% if object_list %}
-                    <form action="{% url 'molecules:complex-export-data' %}" method="get">
-                        <button type="submit">Export to XLS</button>
-                    </form>
                     <table class="table table-bordered" style="width:80%" align="center">
                         <tr>
                             <td>PDB ID</td>
@@ -31,7 +31,10 @@
                                 </td>
                                 <td>{{ object.protein_name }}</td>
                                 <td>{{ object.ligand_name }}</td>
-                                <td>{{ object.residence_time|floatformat:2 }}</td>
+                                <td>{{ object.residence_time|floatformat:2 }} &#177
+                                    {{ object.residence_time_plus_minus|floatformat:2 }}
+                                </td>
+
                                 {% if user.is_superuser %}
                                     <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
                                             class="fa fa-trash"></i>Delete</a>

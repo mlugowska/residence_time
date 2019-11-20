@@ -50,21 +50,24 @@ class ComplexResource(resources.ModelResource):
         ligand = Ligand.objects.get_or_create(complex=obj)[0]
         protein = Protein.objects.get_or_create(complex=obj)[0]
 
-        if field.attribute and field.column_name in data:
-            if field.column_name == 'Ligand Name':
-                ligand.name = data.get('Ligand Name')
-            elif field.column_name == 'Ligand Inchi':
-                ligand.inchi = data.get('Ligand Inchi')
-            elif field.column_name == 'Ligand SMILES':
-                ligand.smiles = data.get('Ligand SMILES')
-            elif field.column_name == 'Ligand Name':
-                ligand.formula = data.get('Ligand Formula')
-            elif field.column_name == 'Protein Name':
-                protein.name = data.get('Protein Name')
-            elif field.column_name == 'Protein Organism':
-                protein.organism = data.get('Protein Organism')
-            else:
-                field.save(obj, data)
+        if field.column_name == 'Ligand Name' in data:
+            ligand.name = data.get('Ligand Name')
+            data.pop('Ligand Name')
+        elif field.column_name == 'Ligand Inchi' in data:
+            ligand.inchi = data.get('Ligand Inchi')
+            data.pop('Ligand Inchi')
+        elif field.column_name == 'Ligand SMILES' in data:
+            ligand.smiles = data.get('Ligand SMILES')
+            data.pop('Ligand SMILES')
+        elif field.column_name == 'Ligand Formula' in data:
+            ligand.formula = data.get('Ligand Formula')
+            data.pop('Ligand Formula')
+        elif field.column_name == 'Protein Name' in data:
+            protein.name = data.get('Protein Name')
+            data.pop('Protein Name')
+        elif field.column_name == 'Protein Organism' in data:
+            protein.organism = data.get('Protein Organism')
+            data.pop('Protein Organism')
 
         ligand.save()
         protein.save()
@@ -72,3 +75,5 @@ class ComplexResource(resources.ModelResource):
         obj.ligand = ligand
         obj.protein = protein
         obj.save()
+
+        super().import_field(field, obj, data, is_m2m=False)

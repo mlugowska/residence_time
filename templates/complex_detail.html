@@ -88,7 +88,7 @@
 
                 <br>
                 <input type="button" value="Stick"
-                       onclick="$3Dmol.viewers['container-01'].setStyle({},{stick:{}}); $3Dmol.viewers['container-01'].render();">
+                       onclick='$3Dmol.viewers["container-01"].setStyle({},{stick:{}}); $3Dmol.viewers["container-01"].render();'>
                 <input type="button" value="Line" onclick="viewer.setStyle({},{line:{}}); viewer.render();">
                 <input type="button" value="Cross"
                        onclick="viewer.setStyle({},{cross:{linewidth:2}}); viewer.render();">
@@ -98,111 +98,115 @@
                 <input type="button" value="Label alpha C's" onclick="addLabels(viewer); viewer.render();">
 
             </div>
-        </div>
-        <div class="col-lg-4" style="background-color:#f1f1f1">
-            <form method="get" action="{% url 'molecules:complex-detail' object.pdb_id %}">
-                {% csrf_token %}
-                <table class="table">
-                    <tr>
-                        <td colspan="2" class="label_text"><b>Entrance information</b></td>
-                    </tr>
-                    <tr>
-                        <td>PDB ID</td>
-                        <td>
-                            <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}">{{ object.pdb_id }}</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Protein Name</td>
-                        <td>
-                            {% if object.protein.name %}
-                                <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
-                            {% else %}
-                                <td>-</td>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ligand Name</td>
-                        <td>
-                            {% if object.ligand.name %}
-                                <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
-                            {% else %}
-                                <td>-</td>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Residence time [min]</td>
-                        {% if object.residence_time > 0.0 %}
-                            {% if object.residence_time_plus_minus > 0.0 %}
-                                <td>{{ object.residence_time.normalize }} &#177
-                                    {{ object.residence_time_plus_minus.normalize }}
-                                </td>
-                            {% else %}
-                                <td>{{ object.residence_time.normalize }}</td>
-                            {% endif %}
-                        {% else %}
-                            <td>-</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="label_text"><b>Additional parameters</b></td>
-                    </tr>
-                    <tr>
-                        <td>K<sub>i</sub></td>
-                        {% if object.ki > 0.0 %}
-                            {% if object.ki_plus_minus > 0.0 %}
-                                <td>{{ object.ki.normalize }} &#177
-                                    {{ object.ki_plus_minus.normalize }}</td>
-                            {% else %}
-                                <td>{{ object.ki.normalize }}</td>
-                            {% endif %}
-                        {% else %}
-                            <td>-</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <td>K<sub>on</sub></td>
-                        {% if object.kon %}
-                            {% if object.kon != 0.0 %}
-                                <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power }}</sup></td>
-                            {% else %}
-                                <td>-</td>
-                            {% endif %}
-                        {% else %}
-                            <td>-</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <td>K<sub>off</sub></td>
-                        {% if object.koff > 0.0 %}
-                            {% if object.koff_plus_minus > 0.0 %}
-                                `    {% endif %}
-                        {% else %}
-                            <td>-</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="label_text"><b>Ligand Properties</b></td>
-                    </tr>
-                    <tr>
-                        <td>Formula</td>
-                        <td>{{ object.ligand.formula }}</td>
 
-                    </tr>
-                    <tr>
-                        <td>Canonical SMILES</td>
-                        <td><textarea readonly>{{ object.ligand.smiles }}</textarea></td>
-                    </tr>
-                    <tr>
-                        <td>InChi String</td>
-                        <td><textarea readonly>{{ object.ligand.inchi }}</textarea></td>
-                    </tr>
-                </table>
-            </form>
-        </div>
+{#        </div>#}
     </div>
+    <div class="col-lg-4" style="background-color:#f1f1f1">
+        <form method="get" action="{% url 'molecules:complex-detail' object.pdb_id %}">
+            {% csrf_token %}
+            <table class="table">
+                <tr>
+                    <td colspan="2" class="label_text"><b>Entrance information</b></td>
+                </tr>
+                <tr>
+                    <td>PDB ID</td>
+                    <td>
+                        <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}">{{ object.pdb_id }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Protein Name</td>
+                    <td>
+                        {% if object.protein.name %}
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a></td>
+                        {% else %}
+                            <td>n/a</td>
+                        {% endif %}
+
+                </tr>
+                <tr>
+                    <td>Ligand Name</td>
+                    <td>
+                        {% if object.ligand.name %}
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a></td>
+                        {% else %}
+                            <td>n/a</td>
+                        {% endif %}
+
+                </tr>
+                <tr>
+                    <td>Residence time [min]</td>
+                    {% if object.residence_time > 0.0 %}
+                        {% if object.residence_time_plus_minus > 0.0 %}
+                            <td>{{ object.residence_time.normalize }} &#177
+                                {{ object.residence_time_plus_minus.normalize }}
+                            </td>
+                        {% else %}
+                            <td>{{ object.residence_time.normalize }}</td>
+                        {% endif %}
+                    {% else %}
+                        <td>n/a</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td colspan="2" class="label_text"><b>Additional parameters</b></td>
+                </tr>
+                <tr>
+                    <td>K<sub>i</sub> [nM]</td>
+                    {% if object.ki > 0.0 %}
+                        {% if object.ki_plus_minus > 0.0 %}
+                            <td>{{ object.ki.normalize }} &#177
+                                {{ object.ki_plus_minus.normalize }}</td>
+                        {% else %}
+                            <td>{{ object.ki.normalize }}</td>
+                        {% endif %}
+                    {% else %}
+                        <td>n/a</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>K<sub>on</sub> [min<sup>-1</sup>M<sup>-1</sup>]</td>
+                    {% if object.kon %}
+                        {% if object.kon != 0.0 %}
+                            <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power }}</sup></td>
+                        {% else %}
+                            <td>n/a</td>
+                        {% endif %}
+                    {% else %}
+                        <td>n/a</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>K<sub>off</sub> [min<sup>-1</sup>]</td>
+                    {% if object.koff > 0.0 %}
+                        {% if object.koff_plus_minus > 0.0 %}
+                            <td>{{ object.koff.normalize }} &#177
+                                {{ object.koff_plus_minus.normalize }}</td>
+                        {% endif %}
+                    {% else %}
+                        <td>n/a</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td colspan="2" class="label_text"><b>Ligand Properties</b></td>
+                </tr>
+                <tr>
+                    <td>Formula</td>
+                    <td>{{ object.ligand.formula }}</td>
+
+                </tr>
+                <tr>
+                    <td>Canonical SMILES</td>
+                    <td>{{ object.ligand.smiles }}</td>
+                </tr>
+                <tr>
+                    <td>InChi String</td>
+                    <td>{{ object.ligand.inchi }}</td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
 </div>
 </body>
 </html>

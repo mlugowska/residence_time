@@ -15,6 +15,13 @@ class Ligand(models.Model):
         self.file.delete()
         super().delete(using=None, keep_parents=False)
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.formula:
+            SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+            self.formula = self.formula.translate(SUB)
+        super().save(force_insert=False, force_update=False, using=None, update_fields=None)
+
 
 class Protein(models.Model):
     name = models.CharField(max_length=250, blank=True, null=True)

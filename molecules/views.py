@@ -35,6 +35,7 @@ class ComplexViewSet(viewsets.ModelViewSet):
 
     def list(self, request: Request, *args: Any, **kwargs: Any):
         response = super().list(request, *args, **kwargs)
+        # update_complex_file()
         return Response({'object_list': response.data}, template_name='main.html', status=status.HTTP_200_OK)
 
     @action(methods=('get', 'post',), detail=False)
