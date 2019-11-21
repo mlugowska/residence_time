@@ -11,10 +11,9 @@ PATH = os.path.join(settings.MEDIA_ROOT, DIR)
 
 
 def update_complex_file():
-    files = os.listdir(PATH)
-
     download_complex_file()
     change_complex_filename()
+    files = os.listdir(PATH)
 
     for file in files:
         pdb_id, dot, format = file.rpartition('.')

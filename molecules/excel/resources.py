@@ -36,15 +36,11 @@ class ComplexResource(resources.ModelResource):
         fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'protein_name', 'protein_organism',
                   'name', 'pdb_id', 'release_year', 'primary_reference', 'residence_time', 'residence_time_plus_minus',
                   'ki', 'kon', 'koff', 'ki_plus_minus', 'koff_plus_minus', 'kon_ten_to_power',)
-        exclude = ('id',)
         export_order = ('pdb_id', 'residence_time', 'residence_time_plus_minus',)
         import_id_fields = ('pdb_id',)
+        import_id_field = 'pdb_id'
         skip_unchanged = True
         report_skipped = True
-
-    def before_import(self, dataset, using_transactions, dry_run, **kwargs):
-        if 'id' not in dataset.headers:
-            dataset.headers.append('id')
 
     def import_field(self, field, obj, data, is_m2m=False):
         ligand = Ligand.objects.get_or_create(complex=obj)[0]
@@ -77,3 +73,25 @@ class ComplexResource(resources.ModelResource):
         obj.save()
 
         super().import_field(field, obj, data, is_m2m=False)
+
+    def get_instance(self, instance_loader, row):
+        row['PDB ID'] = row['PDB ID'].upper()
+        return instance_loader.get_instance(row)
+
+    def dehydrate_ligand_name(self, complex):
+        return complex.ligand.name
+
+    def dehydrate_ligand_inchi(self, complex):
+        return complex.ligand.inchi
+
+    def dehydrate_ligand_smiles(self, complex):
+        return complex.ligand.smiles
+
+    def dehydrate_ligand_formula(self, complex):
+        return complex.ligand.formula
+
+    def dehydrate_protein_name(self, complex):
+        return complex.protein.name
+
+    def dehydrate_protein_organism(self, complex):
+        return complex.protein.organism

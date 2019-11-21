@@ -31,8 +31,10 @@
                                 </td>
                                 <td>{{ object.protein_name }}</td>
                                 <td>{{ object.ligand_name }}</td>
-                                <td>{{ object.residence_time|floatformat:2 }} &#177
-                                    {{ object.residence_time_plus_minus|floatformat:2 }}
+                                <td>{{ object.residence_time|floatformat:1 }}
+                                    {% if object.residence_time_plus_minu > 0.0 %}
+                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }}
+                                    {% endif %}
                                 </td>
 
                                 {% if user.is_superuser %}

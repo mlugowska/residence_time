@@ -137,9 +137,9 @@
                 <tr>
                     <td>Residence time [min]</td>
                     {% if object.residence_time > 0.0 %}
-                        {% if object.residence_time_plus_minus > 0.0 %}
-                            <td>{{ object.residence_time.normalize }} &#177
-                                {{ object.residence_time_plus_minus.normalize }}
+                            <td>{{ object.residence_time|floatformat:0 }}
+                                {% if object.residence_time_plus_minus > 0.0 %}
+                                    &#177 {{ object.residence_time_plus_minus|floatformat:2 }}
                             </td>
                         {% else %}
                             <td>{{ object.residence_time.normalize }}</td>
@@ -154,9 +154,9 @@
                 <tr>
                     <td>K<sub>i</sub> [nM]</td>
                     {% if object.ki > 0.0 %}
-                        {% if object.ki_plus_minus > 0.0 %}
-                            <td>{{ object.ki.normalize }} &#177
-                                {{ object.ki_plus_minus.normalize }}</td>
+                            <td>{{ object.ki|floatformat:0 }}
+                                {% if object.ki_plus_minus > 0.0 %}
+                                    &#177 {{ object.ki_plus_minus|floatformat:2 }}</td>
                         {% else %}
                             <td>{{ object.ki.normalize }}</td>
                         {% endif %}
@@ -169,6 +169,8 @@
                     {% if object.kon %}
                         {% if object.kon != 0.0 %}
                             <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power }}</sup></td>
+                        {% elif object.kon_plus_minus > 0.0%}
+                            <td>{{ object.kon }} &#177 {{ object.kon_plus_minus|floatformat:2 }} &times 10<sup>{{ object.kon_ten_to_power }}</sup></td>
                         {% else %}
                             <td>n/a</td>
                         {% endif %}
@@ -179,9 +181,9 @@
                 <tr>
                     <td>K<sub>off</sub> [min<sup>-1</sup>]</td>
                     {% if object.koff > 0.0 %}
-                        {% if object.koff_plus_minus > 0.0 %}
-                            <td>{{ object.koff.normalize }} &#177
-                                {{ object.koff_plus_minus.normalize }}</td>
+                            <td>{{ object.koff|floatformat:3 }}
+                                {% if object.koff_plus_minus > 0.0 %}
+                                    &#177 {{ object.koff_plus_minus|floatformat:2 }}</td>
                         {% endif %}
                     {% else %}
                         <td>n/a</td>
