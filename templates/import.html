@@ -4,7 +4,7 @@
     <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
     </div>
     <div class="container-fluid">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" action="{% url 'molecules:complex-import-data' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="file" name="file">
             <button type="submit">Upload</button>

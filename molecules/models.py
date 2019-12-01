@@ -1,5 +1,9 @@
+import os
+
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 from utils.filename_parsers import upper_filename_before_dot
 
@@ -14,6 +18,13 @@ class Ligand(models.Model):
     def delete(self, using=None, keep_parents=False):
         self.file.delete()
         super().delete(using=None, keep_parents=False)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if self.formula:
+            SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+            self.formula = self.formula.translate(SUB)
+        super().save(force_insert=False, force_update=False, using=None, update_fields=None)
 
 
 class Protein(models.Model):
@@ -33,23 +44,27 @@ class Complex(models.Model):
     pdb_id = models.CharField(max_length=4, unique=True)
     file = models.FileField(upload_to='complexes/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    release_year = models.CharField(max_length=4, blank=True, null=True)
+    release_year = models.IntegerField(blank=True, null=True)
     primary_reference = models.CharField(max_length=250, blank=True, null=True)
 
-    residence_time = models.DecimalField(max_digits=10, decimal_places=4, default=0.0)
-    residence_time_plus_minus = models.DecimalField(max_digits=10, decimal_places=4, default=0.0)
+    residence_time = models.FloatField(null=False, blank=False)
+    residence_time_plus_minus = models.FloatField(null=True, blank=True)
 
-    ki = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True)
-    kon = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
-    koff = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
-    ki_plus_minus = models.DecimalField(max_digits=12, decimal_places=6, default=0.0)
-    koff_plus_minus = models.DecimalField(max_digits=10, decimal_places=5, default=0.0)
-    kon_ten_to_power = models.DecimalField(max_digits=2, decimal_places=0, default=0)
+    ki = models.FloatField(default=0)
+    kon = models.FloatField(default=0)
+    koff = models.FloatField(default=0)
+    ki_plus_minus = models.FloatField(default=0)
+    koff_plus_minus = models.FloatField(default=0)
+    kon_plus_minus = models.FloatField(default=0)
+    kon_ten_to_power = models.FloatField(default=0)
 
     def delete(self, using=None, keep_parents=False):
-        self.file.delete()
-        self.ligand.delete()
-        self.protein.delete()
+        if self.file:
+            self.file.delete()
+        if self.ligand:
+            self.ligand.delete()
+        if self.protein:
+            self.protein.delete()
         super().delete(using=None, keep_parents=False)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
@@ -57,4 +72,4 @@ class Complex(models.Model):
             self.file.name = upper_filename_before_dot(self.file)
         if self.pdb_id:
             self.pdb_id = self.pdb_id.upper()
-        super().save(force_insert=False, force_update=False, using=None, update_fields=None)
+        super(Complex, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
