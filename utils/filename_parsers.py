@@ -1,5 +1,7 @@
 def upper_filename_before_dot(file):
     name, dot, format = file.name.rpartition('.')
+    if len(name) > 4:
+        return f'{name[:-5]}/{name[-4:].upper()}{dot}{format}'
     return f'{name.upper()}{dot}{format}'
 
 

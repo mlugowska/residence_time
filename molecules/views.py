@@ -15,10 +15,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from molecules.excel.resources import ComplexResource
-from molecules.excel.utils import binary_excel_to_df, df_to_dataset
+from pdbs.create_protein_ligand_files import split_complex_file
+from pdbs.update_complex_pdb_file import update_complex_file
+from molecules.excel.utils import binary_excel_to_df, df_to_dataset, collect_excel_import_errors
 from molecules.models import Complex
 from molecules.serializers import ComplexSerializer
-from utils.get_files import download_file, create_dir_with_structure_files
+from utils.get_files_to_zip import download_file, create_dir_with_structure_files
 from utils.media_renderer import PassthroughRenderer
 
 
@@ -33,6 +35,7 @@ class ComplexViewSet(viewsets.ModelViewSet):
 
     def list(self, request: Request, *args: Any, **kwargs: Any):
         response = super().list(request, *args, **kwargs)
+        # update_complex_file()
         return Response({'object_list': response.data}, template_name='main.html', status=status.HTTP_200_OK)
 
     @action(methods=('get', 'post',), detail=False)
@@ -89,11 +92,15 @@ class ComplexViewSet(viewsets.ModelViewSet):
             dataset = df_to_dataset(df)
 
             result = ComplexResource().import_data(dataset, dry_run=True)
-            # import pdb; pdb.set_trace()
-            if not result.has_errors():
+
+            errors = collect_excel_import_errors(result)
+            print(errors)
+
+            if not errors:
                 ComplexResource().import_data(dataset, dry_run=False)
+                update_complex_file()
+                split_complex_file()
                 return HttpResponseRedirect(redirect_to=reverse('molecules:complex-list'))
-            print(result.row_errors()[0][1][0].error)
 
         return Response(template_name='import.html')
 
