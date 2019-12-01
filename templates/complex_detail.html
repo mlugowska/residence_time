@@ -180,7 +180,22 @@
                             {% if object.koff_plus_minus > 0.0 %}
                                 `    {% endif %}
                         {% else %}
+<<<<<<< Updated upstream
                             <td>-</td>
+=======
+                            <td>n/a</td>
+                        {% endif %}
+                    {% else %}
+                        <td>n/a</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>K<sub>off</sub> [min<sup>-1</sup>]</td>
+                    {% if object.koff > 0.0 %}
+                            <td>{{ object.koff|floatformat: }}
+                                {% if object.koff_plus_minus > 0.0 %}
+                                    &#177 {{ object.koff_plus_minus|floatformat:2 }}</td>
+>>>>>>> Stashed changes
                         {% endif %}
                     </tr>
                     <tr>
