@@ -15,11 +15,11 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from molecules.excel.resources import ComplexResource
-from pdbs.create_protein_ligand_files import split_complex_file
-from pdbs.update_complex_pdb_file import update_complex_file
 from molecules.excel.utils import binary_excel_to_df, df_to_dataset, collect_excel_import_errors
 from molecules.models import Complex
 from molecules.serializers import ComplexSerializer
+from pdbs.create_protein_ligand_files import split_complex_file
+from pdbs.update_complex_pdb_file import update_complex_file
 from utils.get_files_to_zip import download_file, create_dir_with_structure_files
 from utils.media_renderer import PassthroughRenderer
 
@@ -35,7 +35,6 @@ class ComplexViewSet(viewsets.ModelViewSet):
 
     def list(self, request: Request, *args: Any, **kwargs: Any):
         response = super().list(request, *args, **kwargs)
-        # update_complex_file()
         return Response({'object_list': response.data}, template_name='main.html', status=status.HTTP_200_OK)
 
     @action(methods=('get', 'post',), detail=False)
@@ -86,6 +85,7 @@ class ComplexViewSet(viewsets.ModelViewSet):
 
     @action(methods=('post', 'get',), detail=False, url_path='import-data')
     def import_data(self, request, **kwargs):
+
         if request.method == 'POST':
             excel_data = request.FILES['file'].read()
             df = binary_excel_to_df(excel_data)

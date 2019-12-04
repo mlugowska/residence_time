@@ -1,0 +1,26 @@
+version: '3.5'
+
+services:
+  backend:
+    command:
+      bash -c "chmod +x wait_for_db.sh
+      && ./wait_for_db.sh
+      && python3.7 ./manage.py collectstatic --noinput
+      && python3.7 ./manage.py migrate --noinput
+      && uwsgi rt.ini"
+    environment:
+      - DOMAIN=https://pdbrt.com
+
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        NGINX_CONFIG: nginx.prod.conf
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+    volumes:
+      - static-files:/static
+      - media-files:/media
