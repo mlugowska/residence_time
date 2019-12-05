@@ -81,13 +81,27 @@ class ComplexResource(resources.ModelResource):
         obj.save()
 
         super().import_field(field, obj, data, is_m2m=False)
-    #
-    # def init_instance(self, row=None):
-    #     return Complex.objects.create(residence_time=0)
+
+    def get_instance(self, instance_loader, row):
+        row['PDB ID'] = row['PDB ID'].upper()
+        return instance_loader.get_instance(row)
 
     def import_row(self, row, instance_loader, using_transactions=True, dry_run=False, **kwargs):
+        """
+        Imports data from ``tablib.Dataset``. Refer to :doc:`import_workflow`
+        for a more complete description of the whole import process.
+
+        :param row: A ``dict`` of the row to import
+
+        :param instance_loader: The instance loader to be used to load the row
+
+        :param using_transactions: If ``using_transactions`` is set, a transaction
+            is being used to wrap the import
+
+        :param dry_run: If ``dry_run`` is set, or error occurs, transaction
+            will be rolled back.
+        """
         row_result = self.get_row_result_class()()
-        # import pdb; pdb.set_trace()
         try:
             self.before_import_row(row, **kwargs)
             instance, new = self.get_or_init_instance(instance_loader, row)
@@ -98,36 +112,24 @@ class ComplexResource(resources.ModelResource):
                 row_result.import_type = RowResult.IMPORT_TYPE_UPDATE
             row_result.new_record = new
             original = deepcopy(instance)
-            diff = self.get_diff_class()(self, original, new)
-            if self.for_delete(row, instance):
-                if new:
-                    row_result.import_type = RowResult.IMPORT_TYPE_SKIP
-                    diff.compare_with(self, None, dry_run)
-                else:
-                    row_result.import_type = RowResult.IMPORT_TYPE_DELETE
-                    self.delete_instance(instance, using_transactions, dry_run)
-                    diff.compare_with(self, None, dry_run)
+            import_validation_errors = {}
+            try:
+                self.import_obj(instance, row, dry_run)
+            except ValidationError as e:
+                # Validation errors from import_obj() are passed on to
+                # validate_instance(), where they can be combined with model
+                # instance validation errors if necessary
+                import_validation_errors = e.update_error_dict(import_validation_errors)
+            if self.skip_row(instance, original):
+                row_result.import_type = RowResult.IMPORT_TYPE_SKIP
             else:
-                import_validation_errors = {}
-                try:
-                    self.import_obj(instance, row, dry_run)
-                except ValidationError as e:
-                    # Validation errors from import_obj() are passed on to
-                    # validate_instance(), where they can be combined with model
-                    # instance validation errors if necessary
-                    import_validation_errors = e.update_error_dict(import_validation_errors)
-                if self.skip_row(instance, original):
-                    row_result.import_type = RowResult.IMPORT_TYPE_SKIP
-                else:
-                    self.validate_instance(instance, import_validation_errors)
-                    self.save_instance(instance, using_transactions, dry_run)
-                    self.save_m2m(instance, row, using_transactions, dry_run)
-                    # Add object info to RowResult for LogEntry
-                    row_result.object_id = instance.pk
-                    row_result.object_repr = force_text(instance)
-                diff.compare_with(self, instance, dry_run)
+                self.validate_instance(instance, import_validation_errors)
+                self.save_instance(instance, using_transactions, dry_run)
+                self.save_m2m(instance, row, using_transactions, dry_run)
+                # Add object info to RowResult for LogEntry
+                row_result.object_id = instance.pk
+                row_result.object_repr = force_text(instance)
 
-            row_result.diff = diff.as_html()
             self.after_import_row(row, row_result, **kwargs)
 
         except ValidationError as e:
@@ -142,10 +144,6 @@ class ComplexResource(resources.ModelResource):
             tb_info = traceback.format_exc()
             row_result.errors.append(self.get_error_result_class()(e, tb_info, row))
         return row_result
-
-    def get_instance(self, instance_loader, row):
-        row['PDB ID'] = row['PDB ID'].upper()
-        return instance_loader.get_instance(row)
 
     def dehydrate_ligand_name(self, complex):
         return complex.ligand.name

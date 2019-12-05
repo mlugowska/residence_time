@@ -4,11 +4,11 @@ from utils.filename_parsers import upper_filename_before_dot
 
 
 class Ligand(models.Model):
-    name = models.CharField(max_length=250, blank=True, null=True)
+    name = models.CharField(max_length=1000, blank=True, null=True)
     file = models.FileField(upload_to='ligands/', blank=True, null=True)
-    inchi = models.CharField(max_length=250, blank=True, null=True)
-    smiles = models.CharField(max_length=250, blank=True, null=True)
-    formula = models.CharField(max_length=250, blank=True, null=True)
+    inchi = models.CharField(max_length=1000, blank=True, null=True)
+    smiles = models.CharField(max_length=1000, blank=True, null=True)
+    formula = models.CharField(max_length=1000, blank=True, null=True)
 
     def delete(self, using=None, keep_parents=False):
         self.file.delete()
@@ -23,8 +23,8 @@ class Ligand(models.Model):
 
 
 class Protein(models.Model):
-    name = models.CharField(max_length=250, blank=True, null=True)
-    organism = models.CharField(max_length=250, blank=True, null=True)
+    name = models.CharField(max_length=1000, blank=True, null=True)
+    organism = models.CharField(max_length=1000, blank=True, null=True)
     file = models.FileField(upload_to='proteins/', blank=True, null=True)
 
     def delete(self, using=None, keep_parents=False):
@@ -35,14 +35,14 @@ class Protein(models.Model):
 class Complex(models.Model):
     protein = models.OneToOneField(Protein, related_name='complex', on_delete=models.CASCADE, null=True)
     ligand = models.OneToOneField(Ligand, related_name='complex', on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=250, blank=True, null=True)
+    name = models.CharField(max_length=1000, blank=True, null=True)
     pdb_id = models.CharField(max_length=4, unique=True)
     file = models.FileField(upload_to='complexes/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     release_year = models.IntegerField(blank=True, null=True)
-    primary_reference = models.CharField(max_length=250, blank=True, null=True)
+    primary_reference = models.CharField(max_length=1000, blank=True, null=True)
 
-    residence_time = models.FloatField(null=False, blank=False)
+    residence_time = models.FloatField(default=0)
     residence_time_plus_minus = models.FloatField(null=True, blank=True)
 
     ki = models.FloatField(default=0)

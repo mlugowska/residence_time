@@ -18,8 +18,8 @@ services:
     env_file:
       - .env
     volumes:
-      - static-files:/backend/static
-      - media-files:/backend/media
+      - static-files:/static
+      - media-files:/media
     stdin_open: true
     tty: true
 
