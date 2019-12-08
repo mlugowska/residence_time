@@ -5,11 +5,11 @@ services:
     command:
       bash -c "chmod +x wait_for_db.sh
       && ./wait_for_db.sh
-      && python3.7 ./manage.py collectstatic --noinput
-      && python3.7 ./manage.py migrate --noinput
-      && uwsgi rt.ini"
-    environment:
-      - DOMAIN=https://pdbrt.com
+      && python ./manage.py collectstatic --noinput
+      && python ./manage.py migrate --noinput
+      && uwsgi residence_time.ini"
+#    environment:
+#      - DOMAIN=https://pdbrt.com
 
   nginx:
     build:
