@@ -26,6 +26,7 @@ services:
   db:
     image: postgres:12
     container_name: rt_postgres
+    restart: always
     env_file:
       - .env
     volumes:
