@@ -9,3 +9,4 @@ numpy==1.17.4
 tablib
 biopython
 uwsgi==2.0.15
+ipython

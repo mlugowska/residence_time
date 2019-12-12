@@ -84,21 +84,21 @@
             <h2> {{ object.name }} </h2>
 
             <div id="container-01" class="mol-container"></div>
-            <div id="view_modyficators">
-
-                <br>
-                <input type="button" value="Stick"
-                       onclick='$3Dmol.viewers["container-01"].setStyle({},{stick:{}}); $3Dmol.viewers["container-01"].render();'>
-                <input type="button" value="Line" onclick="viewer.setStyle({},{line:{}}); viewer.render();">
-                <input type="button" value="Cross"
-                       onclick="viewer.setStyle({},{cross:{linewidth:2}}); viewer.render();">
-                <input type="button" value="Sphere" onclick="viewer.setStyle({},{sphere:{}}); viewer.render();">
-                <input type="button" value="Cartoon"
-                       onclick="viewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); viewer.render();">
-                <input type="button" value="Label alpha C's" onclick="addLabels(viewer); viewer.render();">
-
-            </div>
-
+            {#            <div id="view_modyficators">#}
+            {##}
+            {#                <br>#}
+            {#                <input type="button" value="Stick"#}
+            {#                       onclick='$3Dmol.viewers["container-01"].setStyle({},{stick:{}}); $3Dmol.viewers["container-01"].render();'>#}
+            {#                <input type="button" value="Line" onclick="viewer.setStyle({},{line:{}}); viewer.render();">#}
+            {#                <input type="button" value="Cross"#}
+            {#                       onclick="viewer.setStyle({},{cross:{linewidth:2}}); viewer.render();">#}
+            {#                <input type="button" value="Sphere" onclick="viewer.setStyle({},{sphere:{}}); viewer.render();">#}
+            {#                <input type="button" value="Cartoon"#}
+            {#                       onclick="viewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); viewer.render();">#}
+            {#                <input type="button" value="Label alpha C's" onclick="addLabels(viewer); viewer.render();">#}
+            {##}
+            {#            </div>#}
+            {##}
             {#        </div>#}
         </div>
         <div class="col-lg-4" style="background-color:#f1f1f1">
@@ -139,13 +139,14 @@
                     <tr>
                         <td>Residence time [min]</td>
                         {% if object.residence_time > 0.0 %}
-                            <td>{{ object.residence_time|floatformat:0 }}
-                                {% if object.residence_time_plus_minus > 0.0 %}
-                                    &#177 {{ object.residence_time_plus_minus|floatformat:2 }}
-                                    </td>
-                                {% else %}
-                                    <td>{{ object.residence_time.normalize }}</td>
-                                {% endif %}
+                            {% if object.residence_time_plus_minus > 0.0 %}
+                                <td>{{ object.residence_time|floatformat:2 }}
+                                    &#177 {{ object.residence_time_plus_minus|floatformat:2 }} </td>
+
+                            {% else %}
+                                <td>{{ object.residence_time|floatformat:2 }}</td>
+
+                            {% endif %}
                         {% else %}
                             <td>n/a</td>
                         {% endif %}
@@ -156,9 +157,9 @@
                     <tr>
                         <td>K<sub>i</sub> [nM]</td>
                         {% if object.ki > 0.0 %}
-                            <td>{{ object.ki|floatformat:0 }}
+                            <td>{{ object.ki|floatformat:1 }}
                                 {% if object.ki_plus_minus > 0.0 %}
-                                    &#177 {{ object.ki_plus_minus|floatformat:2 }}</td>
+                                    &#177 {{ object.ki_plus_minus|floatformat:1 }}</td>
                                 {% else %}
                                     <td>{{ object.ki.normalize }}</td>
                                 {% endif %}
@@ -168,14 +169,13 @@
                     </tr>
                     <tr>
                         <td>K<sub>on</sub> [min<sup>-1</sup>M<sup>-1</sup>]</td>
-                        {% if object.kon %}
-                            {% if object.kon != 0.0 %}
-                                <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power }}</sup></td>
-                            {% elif object.kon_plus_minus > 0.0 %}
+                        {% if object.kon > 0.0 %}
+                            {% if object.kon_plus_minus > 0.0 %}
                                 <td>{{ object.kon }} &#177 {{ object.kon_plus_minus|floatformat:2 }} &times
-                                    10<sup>{{ object.kon_ten_to_power }}</sup></td>
+                                    10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup></td>
                             {% else %}
-                                <td>n/a</td>
+                                <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup>
+                                </td>
                             {% endif %}
                         {% else %}
                             <td>n/a</td>
@@ -183,11 +183,13 @@
                     </tr>
                     <tr>
                         <td>K<sub>off</sub> [min<sup>-1</sup>]</td>
-                        {% if object.koff > 0.0 %}
-                            <td>{{ object.koff|floatformat:3 }}
-                                {% if object.koff_plus_minus > 0.0 %}
+                        {% if object.koff > 0.000 %}
+                            {% if object.koff_plus_minus > 0.000 %}
+                                <td>{{ object.koff|floatformat:3 }}
                                     &#177 {{ object.koff_plus_minus|floatformat:2 }}</td>
-                                {% endif %}
+                            {% else %}
+                                <td>{{ object.koff|floatformat:3 }}</td>
+                            {% endif %}
                         {% else %}
                             <td>n/a</td>
                         {% endif %}

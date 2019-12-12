@@ -17,8 +17,3 @@ services:
     restart: always
     ports:
       - 80:80
-    depends_on:
-      - backend
-    volumes:
-      - static-files:/static
-      - media-files:/media
