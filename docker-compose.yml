@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+  backend:
+    build:
+      context: .
+    image: rt_backend
+    container_name: rt_backend
+    command:
+      bash -c "chmod +x wait_for_db.sh
+      && ./wait_for_db.sh
+      && python manage.py collectstatic --noinput
+      && python manage.py migrate --noinput
+      && python manage.py runserver 0.0.0.0:8000"
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - static-files:/static
+      - media-files:/media
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres:12
+    container_name: rt_postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - /var/lib/postgresql/data
+
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        NGINX_CONFIG: nginx.conf
+    image: rt_nginx
+    container_name: rt_nginx
+    depends_on:
+      - backend
+    ports:
+      - 8000:80
+    restart: always
+    volumes:
+      - static-files:/static
+      - media-files:/media
+
+volumes:
+  static-files:
+  media-files:

@@ -31,5 +31,3 @@ def create_dir_with_structure_files(queryset):
 
         files = [instance.file, instance.protein.file, instance.ligand.file]
         copy_files_to_current_dir(files)
-
-
