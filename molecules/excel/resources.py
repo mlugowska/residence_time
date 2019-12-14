@@ -20,6 +20,8 @@ class ComplexResource(resources.ModelResource):
                           widget=widgets.ForeignKeyWidget(Ligand, 'smiles'))
     ligand_formula = Field(attribute='formula', column_name='Ligand Formula',
                            widget=widgets.ForeignKeyWidget(Ligand, 'formula'))
+    ligand_code = Field(attribute='code', column_name='Ligand Code',
+                           widget=widgets.ForeignKeyWidget(Ligand, 'code'))
 
     protein_name = Field(attribute='name', column_name='Protein Name', widget=widgets.ForeignKeyWidget(Protein, 'name'))
     protein_organism = Field(attribute='organism', column_name='Protein Organism',
@@ -43,7 +45,7 @@ class ComplexResource(resources.ModelResource):
         model = Complex
         fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'protein_name', 'protein_organism',
                   'name', 'pdb_id', 'release_year', 'primary_reference', 'residence_time', 'residence_time_plus_minus',
-                  'ki', 'kon', 'koff', 'ki_plus_minus', 'koff_plus_minus', 'kon_ten_to_power',)
+                  'ki', 'kon', 'koff', 'ki_plus_minus', 'koff_plus_minus', 'kon_ten_to_power', 'ligand_code')
         export_order = ('pdb_id', 'residence_time', 'residence_time_plus_minus',)
         import_id_fields = ('pdb_id',)
         import_id_field = 'pdb_id'
@@ -66,6 +68,9 @@ class ComplexResource(resources.ModelResource):
         elif field.column_name == 'Ligand Formula' in data:
             ligand.formula = data.get('Ligand Formula')
             data.pop('Ligand Formula')
+        elif field.column_name == 'Ligand Code' in data:
+            ligand.code = data.get('Ligand Code')
+            data.pop('Ligand Code')
         elif field.column_name == 'Protein Name' in data:
             protein.name = data.get('Protein Name')
             data.pop('Protein Name')

@@ -10,8 +10,8 @@ PATH = os.path.join(settings.MEDIA_ROOT, COMPLEX_DIR)
 
 def create_ligand_file(file, complex_file, complex):
     if not complex.ligand.file:
-        ligand_lines = [line for line in complex_file if line[0:6] == 'HETATM' and line[17:20] != 'HOH']
-        ligand_filename = os.path.join(settings.MEDIA_ROOT, 'ligands', f'{os.path.splitext(file)[0]}_ligand.sdf')
+        ligand_lines = [line for line in complex_file if complex.ligand.code in line]
+        ligand_filename = os.path.join(settings.MEDIA_ROOT, 'ligands', f'{os.path.splitext(file)[0]}_ligand.pdb')
         with open(ligand_filename, 'w+') as ligand_file:
             ligand_file.writelines(ligand_lines)
 

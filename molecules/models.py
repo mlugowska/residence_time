@@ -9,6 +9,7 @@ class Ligand(models.Model):
     inchi = models.CharField(max_length=1000, blank=True, null=True)
     smiles = models.CharField(max_length=1000, blank=True, null=True)
     formula = models.CharField(max_length=1000, blank=True, null=True)
+    code = models.CharField(max_length=5, blank=True, null=True)
 
     def delete(self, using=None, keep_parents=False):
         self.file.delete()

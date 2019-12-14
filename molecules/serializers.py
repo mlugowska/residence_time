@@ -23,6 +23,7 @@ class ComplexSerializer(serializers.ModelSerializer):
     ligand_smiles = serializers.CharField(source='ligand.smiles', required=False)
     ligand_formula = serializers.CharField(source='ligand.formula', required=False)
     ligand_file = serializers.FileField(source='ligand.file', required=False)
+    ligand_code = serializers.CharField(source='ligand.code', required=False)
 
     protein_name = serializers.CharField(source='protein.name', required=False)
     protein_organism = serializers.CharField(source='protein.organism', required=False)
@@ -30,7 +31,7 @@ class ComplexSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Complex
-        fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'ligand_file',
+        fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'ligand_file', 'ligand_code',
                   'protein_name', 'protein_organism', 'protein_file', 'name', 'pdb_id', 'file',
                   'release_year', 'primary_reference', 'residence_time', 'residence_time_plus_minus', 'ki', 'kon',
                   'koff', 'ki_plus_minus', 'koff_plus_minus', 'kon_ten_to_power',)
