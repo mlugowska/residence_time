@@ -4,6 +4,7 @@ from django.conf import settings
 
 from molecules.models import Complex
 
+
 COMPLEX_DIR = 'complexes'
 PATH = os.path.join(settings.MEDIA_ROOT, COMPLEX_DIR)
 
