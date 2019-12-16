@@ -4,7 +4,6 @@ from django.conf import settings
 
 from molecules.models import Complex
 
-
 COMPLEX_DIR = 'complexes'
 PATH = os.path.join(settings.MEDIA_ROOT, COMPLEX_DIR)
 
@@ -16,7 +15,9 @@ def create_ligand_file(file, complex_file, complex):
         with open(ligand_filename, 'w+') as ligand_file:
             ligand_file.writelines(ligand_lines)
 
-        complex.ligand.file = ligand_filename
+        import pdb; pdb.set_trace()
+        # complex.ligand.file = ligand_filename
+        complex.ligand.file = os.path.join(settings.MEDIA_ROOT, 'ligands', f'{os.path.splitext(file)[0]}.sdf')
         complex.ligand.save()
 
 

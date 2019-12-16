@@ -11,7 +11,7 @@ makemigrations-prod:
 
 .PHONY: make-sdf
 make-sdf:
-	$(containers-tool) run --rm backend bash -c 'python2.7 utils/convert_pdb_to_sdf.py'
+	$(containers-tool) run --rm backend bash -c 'python2.7 pdbs/convert_pdb_to_sdf.py'
 
 .PHONY: django-shell
 django-shell:
