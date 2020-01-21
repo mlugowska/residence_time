@@ -10,3 +10,4 @@ tablib
 biopython
 uwsgi==2.0.15
 ipython
+openbabel

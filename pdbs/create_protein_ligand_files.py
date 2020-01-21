@@ -14,6 +14,14 @@ def create_ligand_file(file, complex_file, complex):
         ligand_filename = os.path.join(settings.MEDIA_ROOT, 'ligands', f'{os.path.splitext(file)[0]}_ligand.pdb')
         with open(ligand_filename, 'w+') as ligand_file:
             ligand_file.writelines(ligand_lines)
+        import pdb; pdb.set_trace()
+        import openbabel
+        obConversion = openbabel.OBConversion()
+        obConversion.SetInAndOutFormats("pdb", "mol2")
+
+        mol = openbabel.OBMol()
+        obConversion.ReadFile(mol, ligand_filename)
+        obConversion.WriteFile(mol, '1abc.mol2')
 
         complex.ligand.file = ligand_filename
         complex.ligand.save()
