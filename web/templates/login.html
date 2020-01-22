@@ -2,12 +2,37 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-</div>
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-{% endblock %}
+
+    <div class="container text-center" style="padding-top: 160px; padding-bottom: 60px">
+        <form id="login-form" method="post"
+              action="{% url 'users:login' %}">
+            {% csrf_token %}
+            <table class="table-responsive" align="center">
+                <tr>
+                    <td><label style="padding-right: 20px" for="id_username">username</label></td>
+                    <td><input id="id_username"
+                               type="text" name="username"
+                               style="width: 200px; background: transparent; border: none; border-bottom: 1px solid #000000; margin-bottom: 20px">
+                    </td>
+                </tr>
+                <tr style="width: fit-content">
+                    <td><label style="padding-right: 20px" for="id_password">password</label></td>
+                    <td><input id="id_password" type="password" name="password" e
+                               style="width: 200px; background: transparent; border: none; border-bottom: 1px solid #000000; margin-bottom: 20px; padding: 10px">
+                    </td>
+                </tr>
+            </table>
+            {% if form.errors %}
+                <p class=" label label-danger">
+                    Your username and password didn't match.
+                    Please try again.
+                </p>
+            {% endif %}
+
+            <input type="submit" value="Login" class="btn btn-primary center"
+                   style="background-color: #1b6d85; color: white; width: 200px; margin-left: 80px; padding: 10px"/>
+            <input type="hidden" name="next" value="{{ next }}"/>
+        </form>
+    </div>
+
+{% endblock content %}

@@ -1,61 +1,68 @@
 {% extends 'base.html' %}
 
+<style>
+    table {
+        border-collapse: collapse;
+        width: 90%;
+    }
+
+    td, th {
+        text-align: left;
+    }
+
+</style>
+
 {% block content %}
-    <div class="jumbotron">
-    </div>
-    <div class="container-fluid">
-        <div class="jumbotron text-center">
+    {#        <div class="jumbotron" style="background-color: #068AA7">#}
+    {#        </div>#}
+    <div class="container">
+        <div class="container text-center" style="padding-top: 160px; padding-bottom: 60px">
             <form class="form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
-                <p>PDB Residence Time</p>
-                <input class="form-control" name="search" type="text" placeholder="Search" size="30" required>
-                <button class="btn btn-outline-success  my-2 my-sm-0" type="submit">Go</button>
+                <p style="font-size: 250%">PDB residence time</p>
+                <input class="form-control" name="search" type="text" placeholder="Search" size="80" style="height: 40px" required>
+                <button class="btn btn-outline-success  my-2 my-sm-0" type="submit" style="background-color: #1b6d85; color: white"><b>Go</b></button>
             </form>
         </div>
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2" style="margin-top: 4px; text-align: right;">
-{#                <form action="{% url 'molecules:complex-export-data' %}" method="get">#}
-{#                    <button type="submit">Export to XLS</button>#}
-{#                </form>#}
-{#                <form action="{% url 'molecules:complex-download-zip' %}" method="get">#}
-{#                    <button type="submit">Download structures</button>#}
-{#                </form>#}
-                {% if object_list %}
-                    <table class="table table-bordered" style="width: 90%" align="center">
+            {% if object_list %}
+                <table class="table table-responsive table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                    <th>PDB ID</th>
+                    <th>Protein</th>
+                    <th>Ligand</th>
+                    <th>Residence Time</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    {% for object in object_list %}
                         <tr>
-                            <td>PDB ID</td>
-                            <td>Protein</td>
-                            <td>Ligand</td>
-                            <td>Residence Time</td>
-                        </tr>
-                        <tbody>
-                        {% for object in object_list %}
-                            <tr>
-                                <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
-                                </td>
-                                <td>{{ object.protein_name }}</td>
-                                <td>{{ object.ligand_name }}</td>
-                                <td>
-                                    {% if object.residence_time_plus_minus > 0.0 %}
-                                        {{ object.residence_time|floatformat:2 }} &#177
-                                        {{ object.residence_time_plus_minus|floatformat:2 }}
-                                    {% else %}
-                                        {{ object.residence_time|floatformat:2 }}
-                                    {% endif %}
-                                </td>
-
-                                {% if user.is_superuser %}
-                                    <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
-                                            class="fa fa-trash"></i>Delete</a>
-                                    </td>
+                            <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
+                            </td>
+                            <td>{{ object.protein_name }}</td>
+                            <td>{{ object.ligand_name }}</td>
+                            <td>
+                                {% if object.residence_time_plus_minus > 0.0 %}
+                                    {{ object.residence_time|floatformat:2 }} &#177
+                                    {{ object.residence_time_plus_minus|floatformat:2 }}
+                                {% else %}
+                                    {{ object.residence_time|floatformat:2 }}
                                 {% endif %}
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    {{ no_objects }}
-                {% endif %}
-            </div>
+                            </td>
+
+                            {% if user.is_superuser %}
+                                <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
+                                        class="fa fa-trash"></i>Delete</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                {{ no_objects }}
+            {% endif %}
         </div>
     </div>
+
 {% endblock %}

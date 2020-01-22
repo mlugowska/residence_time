@@ -48,6 +48,7 @@ services:
     volumes:
       - static-files:/static
       - media-files:/media
+      - ./web/assets:/assets
 
 volumes:
   static-files:
