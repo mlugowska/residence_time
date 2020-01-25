@@ -18,8 +18,6 @@ services:
     env_file:
       - .env
     volumes:
-      - static-files:/static
-      - media-files:/media
       - ./web:/web
     stdin_open: true
     tty: true
@@ -46,10 +44,6 @@ services:
       - 8000:80
     restart: always
     volumes:
-      - static-files:/static
-      - media-files:/media
+      - ./web/static:/static
+      - ./web/media:/media
       - ./web/assets:/assets
-
-volumes:
-  static-files:
-  media-files:

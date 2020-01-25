@@ -1,11 +1,14 @@
 import os
 import shutil
+from collections import OrderedDict
 from shutil import make_archive
 from typing import Any
 from wsgiref.util import FileWrapper
 
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render
 from django.urls import reverse
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
@@ -74,14 +77,26 @@ class ComplexViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=('get',), detail=False, url_path='export-data')
+    @action(methods=('post', 'get',), detail=False, url_path='export-data')
     def export_data(self, request):
-        queryset = self.filter_queryset(self.get_queryset())
-
-        dataset = ComplexResource().export(queryset=queryset)
-        response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="complexes.xls"'
-        return response
+        if request.method == 'POST':
+            file_format = request.POST['file-format']
+            employee_resource = ComplexResource()
+            dataset = employee_resource.export()
+            if file_format == 'CSV':
+                response = HttpResponse(dataset.csv, content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename="residence_time_data.csv"'
+                return response
+            elif file_format == 'JSON':
+                response = HttpResponse(dataset.json, content_type='application/json')
+                response['Content-Disposition'] = 'attachment; filename="residence_time_data.json"'
+                return response
+            elif file_format == 'XLSX (Excel)':
+                response = HttpResponse(dataset.xlsx,
+                                        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = 'attachment; filename="residence_time_data.xlsx"'
+                return response
+        return render(request, 'export.html')
 
     @action(methods=('post', 'get',), detail=False, url_path='import-data')
     def import_data(self, request, **kwargs):

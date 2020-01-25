@@ -1,13 +1,13 @@
 from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
+from import_export.admin import ImportExportActionModelAdmin
 
-from molecules.excel.resources import ComplexResource
 from molecules.models import Protein, Complex, Ligand
+
+
+class ComplexAdmin(ImportExportActionModelAdmin):
+    pass
+
 
 admin.site.register(Protein)
 admin.site.register(Ligand)
-admin.site.register(Complex)
-
-
-class ComplexAdmin(ImportExportModelAdmin):
-    resource_class = ComplexResource
+admin.site.register(Complex, ComplexAdmin)

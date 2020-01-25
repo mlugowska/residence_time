@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
-    </div>
     <div class="container">
-        <div class="jumbotron text-center">
+        <div class="container text-center" style="padding-top: 160px; padding-bottom: 60px">
+            <div style="text-align: left">
+                <a href="javascript:history.go(-1)" class="previous">&laquo; Back</a></div>
             <form method="post" action="{% url 'molecules:complex-import-data' %}" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="file" name="file">
-                <button type="submit">Upload</button>
+                <input class="center-block" type="file" name="file">
+                <button type="submit" style="background-color: #1b6d85; color: white; margin: 20px;">Upload</button>
             </form>
         </div>
     </div>

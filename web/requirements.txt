@@ -11,3 +11,8 @@ biopython
 uwsgi==2.0.15
 ipython
 xlrd==1.2.0
+xlwt
+odfpy
+pyyaml
+openpyxl
+MarkupPy

@@ -21,7 +21,7 @@ class ComplexResource(resources.ModelResource):
     ligand_formula = Field(attribute='formula', column_name='Ligand Formula',
                            widget=widgets.ForeignKeyWidget(Ligand, 'formula'))
     ligand_code = Field(attribute='code', column_name='Ligand Code',
-                           widget=widgets.ForeignKeyWidget(Ligand, 'code'))
+                        widget=widgets.ForeignKeyWidget(Ligand, 'code'))
 
     protein_name = Field(attribute='name', column_name='Protein Name', widget=widgets.ForeignKeyWidget(Protein, 'name'))
     protein_organism = Field(attribute='organism', column_name='Protein Organism',
@@ -43,9 +43,10 @@ class ComplexResource(resources.ModelResource):
 
     class Meta:
         model = Complex
-        fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'protein_name', 'protein_organism',
-                  'name', 'pdb_id', 'release_year', 'primary_reference', 'residence_time', 'residence_time_plus_minus',
-                  'ki', 'kon', 'koff', 'ki_plus_minus', 'koff_plus_minus', 'kon_ten_to_power', 'ligand_code')
+        fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'ligand_code', 'protein_name',
+                  'protein_organism', 'name', 'pdb_id', 'release_year', 'primary_reference', 'residence_time',
+                  'residence_time_plus_minus', 'ki', 'kon', 'koff', 'ki_plus_minus', 'koff_plus_minus',
+                  'kon_ten_to_power')
         export_order = ('pdb_id', 'residence_time', 'residence_time_plus_minus',)
         import_id_fields = ('pdb_id',)
         import_id_field = 'pdb_id'
@@ -161,6 +162,9 @@ class ComplexResource(resources.ModelResource):
 
     def dehydrate_ligand_formula(self, complex):
         return complex.ligand.formula
+
+    def dehydrate_ligand_code(self, complex):
+        return complex.ligand.code
 
     def dehydrate_protein_name(self, complex):
         return complex.protein.name

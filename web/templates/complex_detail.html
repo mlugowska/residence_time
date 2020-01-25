@@ -5,47 +5,31 @@
 <head>
     <meta charset="UTF-8">
     <title>PDBrt</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="htps://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 </head>
+
 <style>
     .label_text {
-        background-color: #dce8e6;
+        background-color: white;
         width: 5%;
-    }
-
-    .value_text {
-        background-color: #ceddd9;
-        max-width: 300px;
     }
 
     .mol-container {
         width: 100%;
         height: 400px;
         position: relative;
+        background-color: white;
     }
 
     .container-fluid {
-        padding: 60px 50px;
-    }
-
-    #inchi {
-        max-width: 300px;
-        max-height: 300px;
-    }
-
-    #smile {
-        max-width: 300px;
-        max-height: 300px;
-    }
-
-    #link {
-        max-width: 300px;
-        word-wrap: break-word;
+        padding-top: 160px;
+        padding-bottom: 60px
     }
 
     .table {
@@ -54,59 +38,112 @@
         margin-left: 10px;
     }
 
+    @font-face {
+        font-family: Akrobat;
+        src: url("/assets/Akrobat-Thin.otf")
+    }
+
+    html * {
+        font-family: Akrobat;
+        font-size: large;
+    }
+
+    body {
+        padding-top: 20px;
+    }
+
+    .navbar {
+        background-color: #f8f8f8;
+        border-color: #e7e7e7;
+        padding: 25px;
+        align-self: center;
+    }
+
+    .navbar-brand {
+        position: relative;
+        top: -40px;
+        left: 31%;
+        transform: translateX(-50%);
+    }
+
+    .custom-nav-bar.navbar-toggle {
+        background-color: #ddd; /*Background color for holder*/
+    }
+
+    .custom-nav-bar.navbar-toggle .icon-bar {
+        background-color: #888; /*Background color for bar in the holder*/
+    }
+
 </style>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-nav navbar-default navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="{% url 'molecules:complex-list' %}">PDBrt</a>
+            <button type="button" class="navbar-toggle collapsed custom-nav-bar" data-toggle="collapse"
+                    data-target="#navbar2">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><img src="/assets/cover.png" alt="" height="110"></a>
         </div>
-
-        <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
-                    Logout {{ user.username }}</a></li>
-            {% else %}
-                <li><a href="{% url 'users:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+        <div id="navbar2" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Download
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'molecules:complex-export-data' %}">Excel file</a></li>
+                        <li><a href="{% url 'molecules:complex-download-zip' %}">ZIP file</a></li>
+                    </ul>
                 </li>
-            {% endif %}
-        </ul>
-
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'molecules:complex-add' %}">Add</a></li>
+                    <li><a href="{% url 'molecules:complex-import-data' %}">Upload from excel</a></li>
+                    <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
+                        Logout {{ user.username }}</a></li>
+                {% else %}
+                    <li><a href="{% url 'users:login' %}"><span
+                            class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </nav>
 
-<div class="jumbotron">
-</div>
 <div class="container-fluid">
-
-    <div class="row">
-        <div class="col-lg-4 col-lg-offset-2" style="background-color:#f1f1f1">
-            <h2> {{ object.name }} </h2>
-
-            <div id="container-01" class="mol-container"></div>
-            {#            <div id="view_modyficators">#}
-            {##}
-            {#                <br>#}
-            {#                <input type="button" value="Stick"#}
-            {#                       onclick='$3Dmol.viewers["container-01"].setStyle({},{stick:{}}); $3Dmol.viewers["container-01"].render();'>#}
-            {#                <input type="button" value="Line" onclick="viewer.setStyle({},{line:{}}); viewer.render();">#}
-            {#                <input type="button" value="Cross"#}
-            {#                       onclick="viewer.setStyle({},{cross:{linewidth:2}}); viewer.render();">#}
-            {#                <input type="button" value="Sphere" onclick="viewer.setStyle({},{sphere:{}}); viewer.render();">#}
-            {#                <input type="button" value="Cartoon"#}
-            {#                       onclick="viewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); viewer.render();">#}
-            {#                <input type="button" value="Label alpha C's" onclick="addLabels(viewer); viewer.render();">#}
-            {##}
-            {#            </div>#}
-            {##}
-            {#        </div>#}
+    <div class="row col-lg-12">
+        <div class="col-lg-4 col-lg-offset-2 text-center" style="background-color: white">
+            <div style="text-align: left">
+                <a href="javascript:history.back()" class="previous">&laquo; Back</a></div>
+            <h2 style="font-size: 300%"> {{ object.pdb_id }} </h2>
+            <div id="container-01" class=" mol-container"></div>
+{#            TODO: buttons not working#}
+            <div id="view_modyficators">
+                <br>
+                <input type="button" value="Stick" style="background-color: black; color: white;"
+                       onclick='$3Dmol.viewers["container-01"].setStyle({},{stick:{}}); $3Dmol.viewers["container-01"].render();'>
+                <input type="button" value="Line" style="background-color: #02023E; color: white;"
+                       onclick="viewer.setStyle({},{line:{}}); viewer.render();">
+                <input type="button" value="Cross" style="background-color: #043567; color: white;"
+                       onclick="viewer.setStyle({},{cross:{linewidth:2}}); viewer.render();">
+                <input type="button" value="Sphere" style="background-color: #055A82; color: white"
+                       onclick="viewer.setStyle({},{sphere:{}}); viewer.render();">
+                <input type="button" value="Cartoon" style="background-color: #057496; color: white;"
+                       onclick="viewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); viewer.render();">
+                <input type="button" value="Label alpha C's" style="background-color: #0694AF; color: white;"
+                       onclick="addLabels(viewer); viewer.render();">
+            </div>
         </div>
-        <div class="col-lg-4" style="background-color:#f1f1f1">
+
+        <div class="col-lg-4" style="background-color: white">
             <form method="get" action="{% url 'molecules:complex-detail' object.pdb_id %}">
                 {% csrf_token %}
                 <table class="table">
                     <tr>
-                        <td colspan="2" class="label_text"><b>Entrance information</b></td>
+                        <th colspan="2" class="label_text" style="font-size: 130%; background-color: #1b6d85; color: white">Entrance
+                            information</th>
                     </tr>
                     <tr>
                         <td>PDB ID</td>
@@ -152,17 +189,17 @@
                         {% endif %}
                     </tr>
                     <tr>
-                        <td colspan="2" class="label_text"><b>Additional parameters</b></td>
+                        <th colspan="2" class="label_text" style="font-size: 130%; background-color: #1b6d85; color: white">Additional
+                            parameters</th>
                     </tr>
                     <tr>
                         <td>K<sub>i</sub> [nM]</td>
                         {% if object.ki > 0.0 %}
-                            <td>{{ object.ki|floatformat:1 }}
-                                {% if object.ki_plus_minus > 0.0 %}
-                                    &#177 {{ object.ki_plus_minus|floatformat:1 }}</td>
-                                {% else %}
-                                    <td>{{ object.ki.normalize }}</td>
-                                {% endif %}
+                            {% if object.ki_plus_minus > 0.0 %}
+                                <td>{{ object.ki|floatformat:1 }} &#177 {{ object.ki_plus_minus|floatformat:1 }}</td>
+                            {% else %}
+                                <td>{{ object.ki|floatformat:1 }}</td>
+                            {% endif %}
                         {% else %}
                             <td>n/a</td>
                         {% endif %}
@@ -195,7 +232,8 @@
                         {% endif %}
                     </tr>
                     <tr>
-                        <td colspan="2" class="label_text"><b>Ligand Properties</b></td>
+                        <th colspan="2" class="label_text" style="font-size: 130%; background-color: #1b6d85; color: white">Ligand
+                            Properties</th>
                     </tr>
                     <tr>
                         <td>Formula</td>
@@ -222,7 +260,7 @@
         let element = $('#container-01');
         let viewer = $3Dmol.createViewer(element);
         viewer = $3Dmol.createViewer("container-01", {defaultcolors: $3Dmol.rasmolElementColors});
-        viewer.setBackgroundColor(0xf1f1f1);
+        viewer.setBackgroundColor(0xffffff);
         var pdbUri = '/media/complexes/{{ object.pdb_id }}.pdb';
 
         jQuery.ajax(pdbUri, {

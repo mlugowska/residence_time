@@ -55,6 +55,3 @@ class ComplexSerializer(serializers.ModelSerializer):
             protein = self._create_protein(protein_data)
 
         return Complex.objects.create(ligand=ligand, protein=protein, **validated_data)
-
-# deskryptory molekularne jak korelują z czasem rezydencji (deskryptory: rdkit -> na podstawie struktury obliczyć
-# liczbę jakoś, która coś określa) ZROBIĆ
