@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+{% load static %}
+{% block content %}
+    <div class="jumbotron" xmlns="http://www.w3.org/1999/html">
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2" style="background-color:#f1f1f1">
+                <h2>Add protein-ligand complex</h2>
+                <form method="post" action="{% url 'molecules:complex-add' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% render_form serializer %}
+                    <input type="submit" value="Add">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

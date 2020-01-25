@@ -1,11 +1,11 @@
 version: '3.5'
 
 services:
-  backend:
+  web:
     build:
-      context: .
-    image: rt_backend
-    container_name: rt_backend
+      context: ./web
+    image: rt_web
+    container_name: rt_web
     command:
       bash -c "chmod +x wait_for_db.sh
       && ./wait_for_db.sh
@@ -18,8 +18,7 @@ services:
     env_file:
       - .env
     volumes:
-      - static-files:/static
-      - media-files:/media
+      - ./web:/web
     stdin_open: true
     tty: true
 
@@ -40,15 +39,11 @@ services:
     image: rt_nginx
     container_name: rt_nginx
     depends_on:
-      - backend
+      - web
     ports:
       - 8000:80
     restart: always
     volumes:
-      - static-files:/static
-      - media-files:/media
-
-volumes:
-  static-files:
-  media-files:
-  backend:
+      - ./web/static:/static
+      - ./web/media:/media
+      - ./web/assets:/assets
