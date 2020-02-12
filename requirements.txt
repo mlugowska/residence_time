@@ -1,9 +1,0 @@
-django-rest-swagger
-django
-djangorestframework
-django-filter
-psycopg2
-django-import-export
-pandas
-numpy
-tablib
