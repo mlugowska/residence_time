@@ -6,3 +6,7 @@
 static/
 media/
 .env
+
+.DS_Store
+package-lock.json
+node_modules

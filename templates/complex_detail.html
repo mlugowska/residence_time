@@ -1,0 +1,210 @@
+{% load rest_framework %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDBrt</title>
+
+    <script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<style>
+    .label_text {
+        background-color: #dce8e6;
+        width: 5%;
+    }
+
+    .mol-container {
+        width: 100%;
+        height: 400px;
+        position: relative;
+    }
+
+    .container-fluid {
+        padding: 60px 50px;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 20px;
+        margin-left: 10px;
+    }
+
+</style>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'molecules:complex-list' %}">PDBrt</a>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
+                    Logout {{ user.username }}</a></li>
+            {% else %}
+                <li><a href="{% url 'users:login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                </li>
+            {% endif %}
+        </ul>
+
+    </div>
+</nav>
+
+<div class="jumbotron">
+</div>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-2" style="background-color:#f1f1f1">
+            <h2> {{ object.name }} </h2>
+
+            <div id="container-01" class="viewer_3Dmoljs"></div>
+            <hr style="margin: 0;">
+
+            <br>
+            <input type="button" value="Stick"
+                   onclick="v.setStyle({},{stick:{}}); v.render();">
+            <input type="button" value="Line" onclick="viewer.setStyle({},{line:{}}); viewer.render();">
+            <input type="button" value="Cross"
+                   onclick="viewer.setStyle({},{cross:{linewidth:2}}); viewer.render();">
+            <input type="button" value="Sphere" onclick="viewer.setStyle({},{sphere:{}}); viewer.render();">
+            <input type="button" value="Cartoon"
+                   onclick="viewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); viewer.render();">
+            <input type="button" value="Label alpha C's" onclick="addLabels(viewer); viewer.render();">
+        </div>
+
+
+        <div class="col-lg-4" style="background-color:#f1f1f1">
+            <form method="get" action="{% url 'molecules:complex-detail' object.pdb_id %}">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <td colspan="2" class="label_text"><b>Entrance information</b></td>
+                    </tr>
+                    <tr>
+                        <td>PDB ID</td>
+                        <td>
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}">{{ object.pdb_id }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Protein Name</td>
+                        <td>
+                            {% if object.protein.name %}
+                                <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ligand Name</td>
+                        <td>
+                            {% if object.ligand.name %}
+                                <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Residence time [min]</td>
+                        {% if object.residence_time > 0.0 %}
+                            {% if object.residence_time_plus_minus > 0.0 %}
+                                <td>{{ object.residence_time.normalize }} &#177
+                                    {{ object.residence_time_plus_minus.normalize }}
+                                </td>
+                            {% else %}
+                                <td>{{ object.residence_time.normalize }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="label_text"><b>Additional parameters</b></td>
+                    </tr>
+                    <tr>
+                        <td>K<sub>i</sub></td>
+                        {% if object.ki > 0.0 %}
+                            {% if object.ki_plus_minus > 0.0 %}
+                                <td>{{ object.ki.normalize }} &#177
+                                    {{ object.ki_plus_minus.normalize }}</td>
+                            {% else %}
+                                <td>{{ object.ki.normalize }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>K<sub>on</sub></td>
+                        {% if object.kon %}
+                            {% if object.kon != 0.0 %}
+                                <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power }}</sup></td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>K<sub>off</sub></td>
+                        {% if object.koff > 0.0 %}
+                            {% if object.koff_plus_minus > 0.0 %}
+                                `    {% endif %}
+                        {% else %}
+                            <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="label_text"><b>Ligand Properties</b></td>
+                    </tr>
+                    <tr>
+                        <td>Formula</td>
+                        <td>{{ object.ligand.formula }}</td>
+
+                    </tr>
+                    <tr>
+                        <td>Canonical SMILES</td>
+                        <td><textarea readonly>{{ object.ligand.smiles }}</textarea></td>
+                    </tr>
+                    <tr>
+                        <td>InChi String</td>
+                        <td><textarea readonly>{{ object.ligand.inchi }}</textarea></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        let element = $('#container-01');
+        let config = {backgroundColor: 'black'};
+        let viewer = $3Dmol.createViewer(element, config);
+        let pdbUri = '/media/complexes/{{ object.pdb_id }}.pdb';
+
+        jQuery.ajax(pdbUri, {
+            success: function (data) {
+                viewer.addModel(data, "pdb");                       /* load data */
+                viewer.setStyle({}, {cartoon: {color: 'spectrum'}});  /* style all atoms */
+                viewer.zoomTo();                                      /* set camera */
+                viewer.render();                                      /* render scene */
+                viewer.zoom(1.2, 1000);                              /* slight zoom */
+            },
+            error: function (hdr, status, err) {
+                console.error("Failed to load PDB " + pdbUri + ": " + err);
+            },
+        });
+    });
+
+</script>
