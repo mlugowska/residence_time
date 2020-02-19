@@ -1,22 +1,28 @@
-containers-tool := docker-compose
 prod-dockerfile = -f docker-compose.yml -f docker-compose.prod.yml
+containers-tool = docker-compose
 
-.PHONY: makemigrations
-makemigrations:
-	$(containers-tool) run --rm backend bash -c 'python manage.py makemigrations && python manage.py migrate'
+build-dev:
+	docker-compose build
+	$(MAKE) dev
 
-.PHONY: makemigrations-prod
-makemigrations-prod:
-	$(containers-tool) $(prod-dockerfile) run --rm backend bash -c 'python manage.py makemigrations && python manage.py migrate'
+dev:
+	docker-compose up
 
-.PHONY: django-shell
-django-shell:
-	$(containers-tool) exec backend bash -c "./manage.py shell"
-
-.PHONY: build-prod
 build-prod:
-	$(containers-tool) $(prod-dockerfile) build
+	docker-compose $(prod-dockerfile) build
+	$(MAKE) prod
 
-.PHONY: start-prod
-start-prod:
-	$(containers-tool) $(prod-dockerfile) up -d
+prod:
+	docker-compose $(prod-dockerfile) up -d
+
+makemigrations:
+	$(containers-tool) run --rm web bash -c 'python manage.py makemigrations && python manage.py migrate'
+
+makemigrations-prod:
+	$(containers-tool) $(prod-dockerfile) run --rm web bash -c 'python manage.py makemigrations && python manage.py migrate'
+
+shell:
+	$(containers-tool) exec web bash -c "./manage.py shell"
+
+shell-prod:
+	$(containers-tool) $(prod-dockerfile) exec web bash -c "./manage.py shell"

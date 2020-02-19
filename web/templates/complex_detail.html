@@ -1,0 +1,377 @@
+{% load rest_framework %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDBrt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+    <script src="https://3Dmol.csb.pitt.edu/build/3Dmol.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="htps://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<style>
+    .label_text {
+        background-color: white;
+        width: 5%;
+    }
+
+    .mol-container {
+        width: 100%;
+        height: 400px;
+        position: relative;
+        background-color: white;
+    }
+
+    .container-fluid {
+        padding-top: 160px;
+        padding-bottom: 60px
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 20px;
+        margin-left: 10px;
+    }
+
+    @font-face {
+        font-family: Akrobat;
+        src: url("/assets/Akrobat-Thin.otf")
+    }
+
+    html * {
+        font-family: Akrobat;
+        font-size: large;
+    }
+
+    body {
+        padding-top: 20px;
+    }
+
+    .navbar {
+        background-color: #f8f8f8;
+        border-color: #e7e7e7;
+        padding: 25px;
+        align-self: center;
+    }
+
+    .navbar-brand {
+        position: relative;
+        top: -40px;
+        left: 31%;
+        transform: translateX(-50%);
+    }
+
+    .custom-nav-bar.navbar-toggle {
+        background-color: #ddd; /*Background color for holder*/
+    }
+
+    .custom-nav-bar.navbar-toggle .icon-bar {
+        background-color: #888; /*Background color for bar in the holder*/
+    }
+
+</style>
+<body>
+<nav class="navbar navbar-nav navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed custom-nav-bar" data-toggle="collapse"
+                    data-target="#navbar2">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><img src="/assets/cover.png" alt="" height="110"></a>
+        </div>
+        <div id="navbar2" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">download
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'molecules:complex-export-data' %}">complex text data</a></li>
+                        <li><a href="{% url 'molecules:complex-download-zip' %}">complex files</a></li>
+                    </ul>
+                </li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'molecules:complex-add' %}">add </a></li>
+                    <li><a href="{% url 'molecules:complex-import-data' %}">upload excel file</a></li>
+                    <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
+                        Logout {{ user.username }}</a></li>
+                {% else %}
+                    <li><a href="{% url 'users:login' %}"><span
+                            class="glyphicon glyphicon-log-in"></span> login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row col-lg-12">
+        <div class="col-lg-4 col-lg-offset-2 text-center" style="background-color: white">
+            <div style="text-align: left">
+                <a href="javascript:history.back()" class="previous">&laquo; back</a></div>
+            <h2 style="font-size: 300%"> {{ object.pdb_id }} </h2>
+            <div id="gldiv" class=" mol-container"></div>
+            <br>
+            <input type="button" value="stick" style="background-color: black; color: white;"
+                   onclick="glviewer.setStyle({},{stick:{}}); glviewer.render();">
+            <input type="button" value="line" style="background-color: #02023E; color: white;"
+                   onclick="glviewer.setStyle({},{line:{}}); glviewer.render();">
+            <input type="button" value="cross" style="background-color: #043567; color: white;"
+                   onclick="glviewer.setStyle({},{cross:{linewidth:2}}); glviewer.render();">
+            <input type="button" value="cartoon" style="background-color: #055A82; color: white;"
+                   onclick="glviewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); glviewer.render();">
+            <input type="button" value="surface" style="background-color: #057496; color: white"
+                   onclick="glviewer.addSurface($3Dmol.SurfaceType.VDW, {}, {hetflag:false,chain:'A'},{hetflag:false,chain:'A'});">
+            <input type="button" value="remove surface" style="background-color: #f8f8f8; color: black;"
+                   onclick="glviewer.removeAllSurfaces();">
+        </div>
+
+        <div class="col-lg-4" style="background-color: white">
+            <form method="get" action="{% url 'molecules:complex-detail' object.pdb_id %}">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <th colspan="2" class="label_text"
+                            style="font-size: 130%; background-color: #1b6d85; color: white">entrance
+                            information
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>PDB ID</td>
+                        <td>
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}">{{ object.pdb_id }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>protein name</td>
+                        <td>
+                            {% if object.protein.name %}
+                                <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
+                                </td>
+                            {% else %}
+                                <td>n/a</td>
+                            {% endif %}
+
+                    </tr>
+                    <tr>
+                        <td>ligand name</td>
+                        <td>
+                            {% if object.ligand.name %}
+                                <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
+                                </td>
+                            {% else %}
+                                <td>n/a</td>
+                            {% endif %}
+
+                    </tr>
+                    <tr>
+                        <td>residence time [min]</td>
+                        {% if object.residence_time > 0.0 %}
+                            {% if object.residence_time_plus_minus > 0.0 %}
+                                <td>{{ object.residence_time|floatformat:2 }}
+                                    &#177 {{ object.residence_time_plus_minus|floatformat:2 }} </td>
+
+                            {% else %}
+                                <td>{{ object.residence_time|floatformat:2 }}</td>
+
+                            {% endif %}
+                        {% else %}
+                            <td>n/a</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="label_text"
+                            style="font-size: 130%; background-color: #1b6d85; color: white">additional
+                            parameters
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>K<sub>i</sub> [nM]</td>
+                        {% if object.ki > 0.0 %}
+                            {% if object.ki_plus_minus > 0.0 %}
+                                <td>{{ object.ki|floatformat:1 }} &#177 {{ object.ki_plus_minus|floatformat:1 }}</td>
+                            {% else %}
+                                <td>{{ object.ki|floatformat:1 }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td>n/a</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>k<sub>on</sub> [min<sup>-1</sup>M<sup>-1</sup>]</td>
+                        {% if object.kon > 0.0 %}
+                            {% if object.kon_plus_minus > 0.0 %}
+                                <td>{{ object.kon }} &#177 {{ object.kon_plus_minus|floatformat:2 }} &times
+                                    10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup></td>
+                            {% else %}
+                                <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup>
+                                </td>
+                            {% endif %}
+                        {% else %}
+                            <td>n/a</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>k<sub>off</sub> [min<sup>-1</sup>]</td>
+                        {% if object.koff > 0.000 %}
+                            {% if object.koff_plus_minus > 0.000 %}
+                                <td>{{ object.koff|floatformat:3 }}
+                                    &#177 {{ object.koff_plus_minus|floatformat:2 }}</td>
+                            {% else %}
+                                <td>{{ object.koff|floatformat:3 }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td>n/a</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="label_text"
+                            style="font-size: 130%; background-color: #1b6d85; color: white">ligand
+                            properties
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>formula</td>
+                        <td>{{ object.ligand.formula }}</td>
+
+                    </tr>
+                    <tr>
+                        <td>canonical SMILES</td>
+                        <td>{{ object.ligand.smiles }}</td>
+                    </tr>
+                    <tr>
+                        <td>InChi</td>
+                        <td>{{ object.ligand.inchi }}</td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+<script>
+
+    var glviewer = null;
+    var labels = [];
+
+    var addLabels = function () {
+        var atoms = glviewer.getModel().selectedAtoms({
+            atom: "CA"
+        });
+        for (var a in atoms) {
+            var atom = atoms[a];
+
+            var l = glviewer.addLabel(atom.resn + " " + atom.resi, {
+                inFront: true,
+                fontSize: 12,
+                position: {
+                    x: atom.x,
+                    y: atom.y,
+                    z: atom.z
+                }
+            });
+            atom.label = l;
+            labels.push(atom);
+        }
+    };
+
+    var removetheLabels = function () {
+        for (var i = 0; i < labels.length; i++) {
+            var atom = labels[i];
+            glviewer.removeLabel(atom.label);
+            delete atom.label
+        }
+
+        labels = []
+
+    };
+
+    var atomcallback = function (atom, viewer) {
+        if (atom.clickLabel === undefined
+            || !atom.clickLabel instanceof $3Dmol.Label) {
+            atom.clickLabel = viewer.addLabel(atom.elem + atom.serial, {
+                fontSize: 14,
+                position: {
+                    x: atom.x,
+                    y: atom.y,
+                    z: atom.z
+                },
+                backgroundColor: "black"
+            });
+            atom.clicked = true;
+        }
+
+        //toggle label style
+        else {
+
+            if (atom.clicked) {
+                var newstyle = atom.clickLabel.getStyle();
+                newstyle.backgroundColor = 0x66ccff;
+
+                viewer.setLabelStyle(atom.clickLabel, newstyle);
+                atom.clicked = !atom.clicked;
+            } else {
+                viewer.removeLabel(atom.clickLabel);
+                delete atom.clickLabel;
+                atom.clicked = false;
+            }
+
+        }
+    };
+    var readText = function (input, func) {
+        if (input.files.length > 0) {
+            var file = input.files[0];
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                func(evt.target.result, file.name);
+            };
+            reader.readAsText(file);
+            $(input).val('');
+        }
+    };
+    let pdbUri = '/media/complexes/{{ object.pdb_id }}.pdb';
+    $(document).ready(function () {
+        jQuery.ajax(pdbUri, {
+            success: function (data) {
+                {#moldata = data = $("#moldata_pdb_large").val();#}
+                glviewer = $3Dmol.createViewer("gldiv", {
+                    defaultcolors: $3Dmol.rasmolElementColors
+                });
+                glviewer.setBackgroundColor(0xffffff);
+
+                receptorModel = m = glviewer.addModel(data, "pdb");
+
+                atoms = m.selectedAtoms({});
+
+                for (var i in atoms) {
+                    var atom = atoms[i];
+                    atom.clickable = true;
+                    atom.callback = atomcallback;
+                }
+
+                glviewer.mapAtomProperties($3Dmol.applyPartialCharges);
+                glviewer.setStyle({}, {stick: {}});
+                glviewer.render();
+                glviewer.setStyle({hetflag: false}, {cartoon: {color: 'spectrum'}});
+                glviewer.zoomTo();
+                glviewer.render();
+            },
+            error: function (hdr, status, err) {
+                console.error('Failed to load PDB ' + pdbUri + ': ' + err);
+            },
+        });
+
+    });
+</script>
