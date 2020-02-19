@@ -3,6 +3,7 @@ import os
 from django.conf import settings
 
 from molecules.models import Complex
+import openbabel
 
 COMPLEX_DIR = 'complexes'
 PATH = os.path.join(settings.MEDIA_ROOT, COMPLEX_DIR)
@@ -11,17 +12,26 @@ PATH = os.path.join(settings.MEDIA_ROOT, COMPLEX_DIR)
 def create_ligand_file(file, complex_file, complex):
     if not complex.ligand.file:
         ligand_lines = [line for line in complex_file if complex.ligand.code in line]
-        ligand_filename = os.path.join(settings.MEDIA_ROOT, 'ligands', f'{os.path.splitext(file)[0]}_ligand.pdb')
-        with open(ligand_filename, 'w+') as ligand_file:
-            ligand_file.writelines(ligand_lines)
+        ligand_filename = f'{os.path.splitext(file)[0]}_ligand'
+        ligand_pdb_file = os.path.join(settings.MEDIA_ROOT, 'ligands', f'{ligand_filename}.pdb')
+        with open(ligand_pdb_file, 'w+') as ligand_pdb:
+            ligand_pdb.writelines(ligand_lines)
 
-        complex.ligand.file = ligand_filename
+        obConversion = openbabel.OBConversion()
+        obConversion.SetInAndOutFormats('pdb', 'sdf')
+
+        mol = openbabel.OBMol()
+        obConversion.ReadFile(mol, ligand_pdb_file)
+        ligand_sdf_file = f'{os.path.join(settings.MEDIA_ROOT, "ligands", f"{ligand_filename}.sdf")}'
+        obConversion.WriteFile(mol, f'{ligand_sdf_file}')
+
+        complex.ligand.file = ligand_sdf_file
         complex.ligand.save()
 
 
 def create_protein_file(file, complex_file, complex):
     if not complex.protein.file:
-        protein_lines = [line for line in complex_file if line[0:4] == 'ATOM']
+        protein_lines = [line for line in complex_file if line[0:4] == 'ATOM' and line[21:22] == 'A']
         protein_filename = os.path.join(settings.MEDIA_ROOT, 'proteins', f'{os.path.splitext(file)[0]}_protein.pdb')
         with open(protein_filename, 'w+') as protein_file:
             protein_file.writelines(protein_lines)

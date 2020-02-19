@@ -14,3 +14,15 @@ build-prod:
 
 prod:
 	docker-compose $(prod-dockerfile) up -d
+
+makemigrations:
+	$(containers-tool) run --rm web bash -c 'python manage.py makemigrations && python manage.py migrate'
+
+makemigrations-prod:
+	$(containers-tool) $(prod-dockerfile) run --rm web bash -c 'python manage.py makemigrations && python manage.py migrate'
+
+shell:
+	$(containers-tool) exec web bash -c "./manage.py shell"
+
+shell-prod:
+	$(containers-tool) $(prod-dockerfile) exec web bash -c "./manage.py shell"

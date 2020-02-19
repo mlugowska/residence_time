@@ -93,20 +93,6 @@ class ComplexResource(resources.ModelResource):
         return instance_loader.get_instance(row)
 
     def import_row(self, row, instance_loader, using_transactions=True, dry_run=False, **kwargs):
-        """
-        Imports data from ``tablib.Dataset``. Refer to :doc:`import_workflow`
-        for a more complete description of the whole import process.
-
-        :param row: A ``dict`` of the row to import
-
-        :param instance_loader: The instance loader to be used to load the row
-
-        :param using_transactions: If ``using_transactions`` is set, a transaction
-            is being used to wrap the import
-
-        :param dry_run: If ``dry_run`` is set, or error occurs, transaction
-            will be rolled back.
-        """
         row_result = self.get_row_result_class()()
         try:
             self.before_import_row(row, **kwargs)
@@ -122,9 +108,6 @@ class ComplexResource(resources.ModelResource):
             try:
                 self.import_obj(instance, row, dry_run)
             except ValidationError as e:
-                # Validation errors from import_obj() are passed on to
-                # validate_instance(), where they can be combined with model
-                # instance validation errors if necessary
                 import_validation_errors = e.update_error_dict(import_validation_errors)
             if self.skip_row(instance, original):
                 row_result.import_type = RowResult.IMPORT_TYPE_SKIP
@@ -132,7 +115,6 @@ class ComplexResource(resources.ModelResource):
                 self.validate_instance(instance, import_validation_errors)
                 self.save_instance(instance, using_transactions, dry_run)
                 self.save_m2m(instance, row, using_transactions, dry_run)
-                # Add object info to RowResult for LogEntry
                 row_result.object_id = instance.pk
                 row_result.object_repr = force_text(instance)
 
@@ -143,8 +125,6 @@ class ComplexResource(resources.ModelResource):
             row_result.validation_error = e
         except Exception as e:
             row_result.import_type = RowResult.IMPORT_TYPE_ERROR
-            # There is no point logging a transaction error for each row
-            # when only the original error is likely to be relevant
             if not isinstance(e, TransactionManagementError):
                 logger.debug(e, exc_info=e)
             tb_info = traceback.format_exc()

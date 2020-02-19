@@ -92,21 +92,21 @@
         <div id="navbar2" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Download
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">download
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'molecules:complex-export-data' %}">Excel file</a></li>
-                        <li><a href="{% url 'molecules:complex-download-zip' %}">ZIP file</a></li>
+                        <li><a href="{% url 'molecules:complex-export-data' %}">complex text data</a></li>
+                        <li><a href="{% url 'molecules:complex-download-zip' %}">complex files</a></li>
                     </ul>
                 </li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'molecules:complex-add' %}">Add</a></li>
-                    <li><a href="{% url 'molecules:complex-import-data' %}">Upload from excel</a></li>
+                    <li><a href="{% url 'molecules:complex-add' %}">add </a></li>
+                    <li><a href="{% url 'molecules:complex-import-data' %}">upload excel file</a></li>
                     <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
                         Logout {{ user.username }}</a></li>
                 {% else %}
                     <li><a href="{% url 'users:login' %}"><span
-                            class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                            class="glyphicon glyphicon-log-in"></span> login</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -117,22 +117,22 @@
     <div class="row col-lg-12">
         <div class="col-lg-4 col-lg-offset-2 text-center" style="background-color: white">
             <div style="text-align: left">
-                <a href="javascript:history.back()" class="previous">&laquo; Back</a></div>
+                <a href="javascript:history.back()" class="previous">&laquo; back</a></div>
             <h2 style="font-size: 300%"> {{ object.pdb_id }} </h2>
             <div id="gldiv" class=" mol-container"></div>
             <br>
-            <input type="button" value="Stick" style="background-color: black; color: white;"
+            <input type="button" value="stick" style="background-color: black; color: white;"
                    onclick="glviewer.setStyle({},{stick:{}}); glviewer.render();">
-            <input type="button" value="Line" style="background-color: #02023E; color: white;"
+            <input type="button" value="line" style="background-color: #02023E; color: white;"
                    onclick="glviewer.setStyle({},{line:{}}); glviewer.render();">
-            <input type="button" value="Cross" style="background-color: #043567; color: white;"
+            <input type="button" value="cross" style="background-color: #043567; color: white;"
                    onclick="glviewer.setStyle({},{cross:{linewidth:2}}); glviewer.render();">
-            <input type="button" value="Sphere" style="background-color: #055A82; color: white"
-                   onclick="glviewer.setStyle({},{sphere:{}}); glviewer.render();">
-            <input type="button" value="Cartoon" style="background-color: #057496; color: white;"
+            <input type="button" value="cartoon" style="background-color: #055A82; color: white;"
                    onclick="glviewer.setStyle({hetflag:false},{cartoon:{color: 'spectrum'}}); glviewer.render();">
-            <input type="button" value="Surface" style="background-color: #0694AF; color: white;"
-                   onclick="addLabels(glviewer); glviewer.render();">
+            <input type="button" value="surface" style="background-color: #057496; color: white"
+                   onclick="glviewer.addSurface($3Dmol.SurfaceType.VDW, {}, {hetflag:false,chain:'A'},{hetflag:false,chain:'A'});">
+            <input type="button" value="remove surface" style="background-color: #f8f8f8; color: black;"
+                   onclick="glviewer.removeAllSurfaces();">
         </div>
 
         <div class="col-lg-4" style="background-color: white">
@@ -141,7 +141,7 @@
                 <table class="table">
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 130%; background-color: #1b6d85; color: white">Entrance
+                            style="font-size: 130%; background-color: #1b6d85; color: white">entrance
                             information
                         </th>
                     </tr>
@@ -152,7 +152,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Protein Name</td>
+                        <td>protein name</td>
                         <td>
                             {% if object.protein.name %}
                                 <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
@@ -163,7 +163,7 @@
 
                     </tr>
                     <tr>
-                        <td>Ligand Name</td>
+                        <td>ligand name</td>
                         <td>
                             {% if object.ligand.name %}
                                 <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
@@ -174,7 +174,7 @@
 
                     </tr>
                     <tr>
-                        <td>Residence time [min]</td>
+                        <td>residence time [min]</td>
                         {% if object.residence_time > 0.0 %}
                             {% if object.residence_time_plus_minus > 0.0 %}
                                 <td>{{ object.residence_time|floatformat:2 }}
@@ -190,7 +190,7 @@
                     </tr>
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 130%; background-color: #1b6d85; color: white">Additional
+                            style="font-size: 130%; background-color: #1b6d85; color: white">additional
                             parameters
                         </th>
                     </tr>
@@ -207,7 +207,7 @@
                         {% endif %}
                     </tr>
                     <tr>
-                        <td>K<sub>on</sub> [min<sup>-1</sup>M<sup>-1</sup>]</td>
+                        <td>k<sub>on</sub> [min<sup>-1</sup>M<sup>-1</sup>]</td>
                         {% if object.kon > 0.0 %}
                             {% if object.kon_plus_minus > 0.0 %}
                                 <td>{{ object.kon }} &#177 {{ object.kon_plus_minus|floatformat:2 }} &times
@@ -221,7 +221,7 @@
                         {% endif %}
                     </tr>
                     <tr>
-                        <td>K<sub>off</sub> [min<sup>-1</sup>]</td>
+                        <td>k<sub>off</sub> [min<sup>-1</sup>]</td>
                         {% if object.koff > 0.000 %}
                             {% if object.koff_plus_minus > 0.000 %}
                                 <td>{{ object.koff|floatformat:3 }}
@@ -235,21 +235,21 @@
                     </tr>
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 130%; background-color: #1b6d85; color: white">Ligand
-                            Properties
+                            style="font-size: 130%; background-color: #1b6d85; color: white">ligand
+                            properties
                         </th>
                     </tr>
                     <tr>
-                        <td>Formula</td>
+                        <td>formula</td>
                         <td>{{ object.ligand.formula }}</td>
 
                     </tr>
                     <tr>
-                        <td>Canonical SMILES</td>
+                        <td>canonical SMILES</td>
                         <td>{{ object.ligand.smiles }}</td>
                     </tr>
                     <tr>
-                        <td>InChi String</td>
+                        <td>InChi</td>
                         <td>{{ object.ligand.inchi }}</td>
                     </tr>
                 </table>

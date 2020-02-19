@@ -6,7 +6,7 @@
             <form class="  form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
                 <p style="font-size: 250%">PDB residence time</p>
                 <input class="form-control" name="search" type="text"
-                       placeholder="Search by PDB ID, residence time, protein and ligand name" size="80"
+                       placeholder="search by PDB ID, residence time, protein and ligand name" size="80"
                        style="height: 40px" required>
                 <button class="btn btn-outline-success  my-2 my-sm-0" type="submit"
                         style="background-color: #1b6d85; color: white"><b>Go</b></button>
@@ -18,9 +18,9 @@
                     <thead>
                     <tr>
                         <th style="width:8%; font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
-                        <th style="font-size: 130%; background-color: #1b6d85; color: white">Protein</th>
-                        <th style="font-size: 130%; background-color: #1b6d85; color: white">Ligand</th>
-                        <th style="width:13%; font-size: 130%; background-color: #1b6d85; color: white">Residence Time
+                        <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
+                        <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
+                        <th style="width:13%; font-size: 130%; background-color: #1b6d85; color: white">residence time
                         </th>
                     </tr>
                     </thead>
@@ -42,7 +42,7 @@
 
                             {% if user.is_superuser %}
                                 <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
-                                        class="fa fa-trash-o" style="font-size:20px;color:red">Delete</i></a>
+                                        class="fa fa-trash-o" style="font-size:20px;color:red">delete</i></a>
                                 </td>
                             {% endif %}
                         </tr>
