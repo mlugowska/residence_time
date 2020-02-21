@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'import_export',
-    'rest_framework_swagger',
     'molecules',
     'pdbs',
 ]
