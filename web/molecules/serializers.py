@@ -34,7 +34,7 @@ class ComplexSerializer(serializers.ModelSerializer):
         fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'ligand_file', 'ligand_code',
                   'protein_name', 'protein_organism', 'protein_file', 'name', 'pdb_id', 'file',
                   'release_year', 'primary_reference', 'residence_time', 'residence_time_plus_minus', 'ki', 'kon',
-                  'koff', 'ki_plus_minus', 'koff_plus_minus', 'kon_ten_to_power',)
+                  'koff', 'ki_plus_minus', 'koff_plus_minus', 'kon_ten_to_power', 'pubmed_id',)
 
     @staticmethod
     def _create_ligand(ligand_data: Dict):
