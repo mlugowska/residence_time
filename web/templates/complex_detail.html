@@ -189,6 +189,14 @@
                         {% endif %}
                     </tr>
                     <tr>
+                        <td>primary reference</td>
+                        {% if object.primary_reference %}
+                                <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term={{ object.pubmed_id }}" target="_tab">{{ object.primary_reference }}</a> </td>
+                        {% else %}
+                            <td>to be published</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
                         <th colspan="2" class="label_text"
                             style="font-size: 130%; background-color: #1b6d85; color: white">additional
                             parameters
