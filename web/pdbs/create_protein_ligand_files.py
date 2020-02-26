@@ -31,7 +31,7 @@ def create_ligand_file(file, complex_file, complex):
 
 def create_protein_file(file, complex_file, complex):
     if not complex.protein.file:
-        protein_lines = [line for line in complex_file if line[0:4] == 'ATOM' and line[21:22] == 'A']
+        protein_lines = [line for line in complex_file if line[0:4] == 'ATOM']
         protein_filename = os.path.join(settings.MEDIA_ROOT, 'proteins', f'{os.path.splitext(file)[0]}_protein.pdb')
         with open(protein_filename, 'w+') as protein_file:
             protein_file.writelines(protein_lines)
