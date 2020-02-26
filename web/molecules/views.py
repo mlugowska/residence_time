@@ -1,12 +1,10 @@
 import os
 import shutil
-from collections import OrderedDict
 from shutil import make_archive
 from typing import Any
 from wsgiref.util import FileWrapper
 
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -28,7 +26,7 @@ from utils.media_renderer import PassthroughRenderer
 
 
 class ComplexViewSet(viewsets.ModelViewSet):
-    queryset = Complex.objects.all()
+    queryset = Complex.objects.all().order_by('pdb_id')
     serializer_class = ComplexSerializer
     renderer_classes = (TemplateHTMLRenderer,)
     parser_classes = (MultiPartParser,)
@@ -56,7 +54,7 @@ class ComplexViewSet(viewsets.ModelViewSet):
         return Response({'object': instance, 'data': serializer.data}, template_name='complex_detail.html')
 
     @action(methods=('post', 'get',), detail=True)
-    def delete(self, request, **kwargs):
+    def delete(self, request: Request, **kwargs: Any):
         instance = self.get_object()
         if request.method == 'POST':
             self.perform_destroy(instance=instance)
@@ -78,7 +76,7 @@ class ComplexViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=('post', 'get',), detail=False, url_path='export-data')
-    def export_data(self, request):
+    def export_data(self, request: Request):
         if request.method == 'POST':
             file_format = request.POST['file-format']
             employee_resource = ComplexResource()
@@ -99,7 +97,7 @@ class ComplexViewSet(viewsets.ModelViewSet):
         return render(request, 'export.html')
 
     @action(methods=('post', 'get',), detail=False, url_path='import-data')
-    def import_data(self, request, **kwargs):
+    def import_data(self, request: Request, **kwargs: Any):
 
         if request.method == 'POST':
             excel_data = request.FILES['file'].read()
@@ -120,7 +118,7 @@ class ComplexViewSet(viewsets.ModelViewSet):
         return Response(template_name='import.html')
 
     @action(methods=('get',), detail=False, url_path='download-zip')
-    def download_zip(self, request):
+    def download_zip(self, request: Request):
         shutil.rmtree(os.path.join(settings.MEDIA_ROOT, 'structures'), ignore_errors=True)
         create_dir_with_structure_files(queryset=Complex.objects.all())
 
