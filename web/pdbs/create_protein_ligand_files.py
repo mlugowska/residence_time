@@ -22,6 +22,7 @@ def create_ligand_file(file, complex_file, complex):
 
         mol = openbabel.OBMol()
         obConversion.ReadFile(mol, ligand_pdb_file)
+        os.remove(os.path.join(settings.MEDIA_ROOT, 'ligands', f'{ligand_filename}.pdb'))
         ligand_sdf_file = f'{os.path.join(settings.MEDIA_ROOT, "ligands", f"{ligand_filename}.sdf")}'
         obConversion.WriteFile(mol, f'{ligand_sdf_file}')
 
