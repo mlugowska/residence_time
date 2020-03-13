@@ -17,3 +17,6 @@ services:
     restart: always
     ports:
       - 80:80
+      - 443:443
+    volumes:
+    - /home/rt_user/ssl_certs:/etc/nginx/ssl_certs
