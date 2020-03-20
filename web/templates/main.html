@@ -1,9 +1,158 @@
-{% extends 'base.html' %}
+{% load rest_framework %}
 
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDBrt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+    <script src="https://3Dmol.csb.pitt.edu/build/3Dmol.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="htps://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding-top: 20px;
+    }
+
+    .image {
+        width: 100vw;
+        height: 100vh;
+        background-image: url('/assets/background.png');
+        background-size: cover;
+        position: relative;
+    }
+
+    .content {
+        height: 400px;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 20px;
+        margin-left: 10px;
+    }
+
+    @font-face {
+        font-family: 'Akrobat';
+        src: url("/assets/Akrobat-Thin.otf")
+    }
+
+    html * {
+        font-family: 'Akrobat', sans-serif;
+        font-size: large;
+    }
+
+    .navbar {
+        background-color: transparent;
+        background: transparent;
+        border-color: transparent;
+        padding: 25px;
+        align-self: center;
+    }
+
+    .navbar-brand {
+        position: relative;
+        top: -40px;
+        left: 31%;
+        transform: translateX(-50%);
+    }
+
+    .dropdown-menu {
+        background-color: transparent;
+    }
+
+    .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+        background-color: black;
+    }
+
+    .navbar-nav.dropdown > a:hover {
+        background-color: black;
+    }
+
+    header {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        text-align: center;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 10vw;
+        white-space: nowrap;
+    }
+
+    p {
+        margin: 0;
+        font-size: 4vw;
+    }
+
+</style>
+
+
+<body>
+<div class="image">
+    <div class="container">
+        <nav class="navbar navbar-nav navbar-fixed-top navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#navbar2">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img src="/assets/logo-white.png" alt="" height="110"></a>
+            </div>
+            <div id="navbar2" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
+                           style="color: #f8f8f8; background-color: transparent">download
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{% url 'molecules:complex-export-data' %}" style="color: #f8f8f8">complex text
+                                data</a></li>
+                            <li><a href="{% url 'molecules:complex-download-zip' %}" style="color: #f8f8f8">complex
+                                files</a></li>
+                        </ul>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'molecules:complex-add' %}" style="color: #f8f8f8">add </a></li>
+                        <li><a href="{% url 'molecules:complex-import-data' %}" style="color: #f8f8f8">upload excel
+                            file</a></li>
+                        <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"
+                                                                     style="color: #f8f8f8"></span>
+                            Logout {{ user.username }}</a></li>
+                    {% else %}
+                        <li><a href="{% url 'users:login' %}" style="color: #f8f8f8"><span
+                                class="glyphicon glyphicon-log-in"></span> login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+        </nav>
+    </div>
+    <header>
+        <h1>PDBrt Database</h1>
+        <p>a free database of complexes with measured drug-target residence time</p>
+    </header>
+
+</div>
+
+<div class="content">
     <div class="container">
         <div class="container text-center" style="padding-top: 160px; padding-bottom: 60px">
-            <form class="  form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
+            <form class="  form-inline" action="{% url 'molecules:complex-list' %}" method="get"
+                  accept-charset="utf-8">
                 <p style="font-size: 250%">PDB residence time</p>
                 <input class="form-control" name="search" type="text"
                        placeholder="search by PDB ID, residence time, protein and ligand name" size="80"
@@ -20,7 +169,8 @@
                         <th style="width:8%; font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
                         <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
                         <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
-                        <th style="width:13%; font-size: 130%; background-color: #1b6d85; color: white">residence time
+                        <th style="width:13%; font-size: 130%; background-color: #1b6d85; color: white">residence
+                            time
                         </th>
                     </tr>
                     </thead>
@@ -54,4 +204,6 @@
             {% endif %}
         </div>
     </div>
-{% endblock %}
+</div>
+</body>
+</html>
