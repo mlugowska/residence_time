@@ -10,6 +10,9 @@
     <script src="https://3Dmol.csb.pitt.edu/build/3Dmol.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="htps://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -17,25 +20,21 @@
 <style>
     body {
         margin: 0;
-        padding-top: 20px;
+        padding: 0;
     }
 
     .image {
         width: 100vw;
         height: 100vh;
         background-image: url('/assets/background.png');
-        background-size: cover;
         position: relative;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
     }
 
     .content {
         height: 400px;
-    }
-
-    .table {
-        width: 100%;
-        margin-top: 20px;
-        margin-left: 10px;
     }
 
     @font-face {
@@ -46,21 +45,27 @@
     html * {
         font-family: 'Akrobat', sans-serif;
         font-size: large;
+        scroll-behavior: smooth;
     }
 
     .navbar {
         background-color: transparent;
-        background: transparent;
         border-color: transparent;
-        padding: 25px;
+        padding: 10px;
+        margin: 5px;
         align-self: center;
     }
 
     .navbar-brand {
+        width: 80% !important;
         position: relative;
         top: -40px;
-        left: 31%;
+        left: 20%;
         transform: translateX(-50%);
+    }
+
+    .navbar-default .navbar-collapse, .navbar-default .navbar-form {
+        border-color: transparent;
     }
 
     .dropdown-menu {
@@ -69,10 +74,12 @@
 
     .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
         background-color: black;
+        border-color: transparent;
     }
 
     .navbar-nav.dropdown > a:hover {
         background-color: black;
+        border-color: transparent;
     }
 
     header {
@@ -86,21 +93,82 @@
 
     h1 {
         margin: 0;
-        font-size: 10vw;
-        white-space: nowrap;
+        font-size: 8vw;
     }
 
     p {
         margin: 0;
-        font-size: 4vw;
+        font-size: 2vw;
+        width: 2000px;
+        color: #9d9d9d;
     }
+
+    p#explore {
+        font-size: 3vw;
+        color: white;
+    }
+
+    a#sectionscroll {
+        color: white;
+        font-size: 2vw;
+    }
+
+    input[type=text] {
+        font-size: 1.5vw;
+        height: 60px;
+        margin-bottom: 3em
+    }
+
+    button[type=submit] {
+        background-color: #1b6d85;
+        color: white;
+        height: 60px;
+        margin-bottom: 3em;
+        width: 80px;
+        font-size: 1.5vw;
+    }
+
+
+    @media only screen and (max-width: 600px) {
+        h1 {
+            font-size: 300%;
+        }
+
+        p {
+            font-size: 100%;
+            width: 300px;
+        }
+
+        p#explore {
+            font-size: 180%;
+        }
+
+        input[type=text] {
+            font-size: 70%;
+            margin-bottom: 1em;
+            height: 40px;
+        }
+
+        button[type=submit] {
+            height: 40px;
+            margin-bottom: 4em;
+            width: 100px;
+            font-size: 60%;
+        }
+
+        a#sectionscroll {
+            font-size: 150%;
+        }
+
+    }
+
 
 </style>
 
 
 <body>
 <div class="image">
-    <div class="container">
+    <div class="container" id="section01">
         <nav class="navbar navbar-nav navbar-fixed-top navbar-default">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -143,40 +211,36 @@
     </div>
     <header>
         <h1>PDBrt Database</h1>
-        <p>a free database of complexes with measured drug-target residence time</p>
+        <p style="margin-bottom: 3em">a free database of complexes with measured drug-target residence time</p>
+        <p id="explore">Explore the PDBrt archive</p>
+        <form class="form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
+            <input class="form-control" name="search" type="text"
+                   placeholder="search by PDB ID, residence time, protein and ligand name" size="60">
+            <button class="btn btn-outline-success  my-2 my-sm-0" type="submit">
+                <b>GO</b></button>
+        </form>
+        <a id="sectionscroll" href="#section02">or view all complexes</a>
     </header>
-
 </div>
 
 <div class="content">
-    <div class="container">
-        <div class="container text-center" style="padding-top: 160px; padding-bottom: 60px">
-            <form class="  form-inline" action="{% url 'molecules:complex-list' %}" method="get"
-                  accept-charset="utf-8">
-                <p style="font-size: 250%">PDB residence time</p>
-                <input class="form-control" name="search" type="text"
-                       placeholder="search by PDB ID, residence time, protein and ligand name" size="80"
-                       style="height: 40px" required>
-                <button class="btn btn-outline-success  my-2 my-sm-0" type="submit"
-                        style="background-color: #1b6d85; color: white"><b>Go</b></button>
-            </form>
-        </div>
-        <div class="row">
+    <div class="container" id="section02">
+        <div class="table-responsive">
             {% if object_list %}
-                <table class="table table-hover">
+                <table id="example" class="w-auto table table-hover ">
                     <thead>
                     <tr>
-                        <th style="width:8%; font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
+                        <th style="font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
                         <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
                         <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
-                        <th style="width:13%; font-size: 130%; background-color: #1b6d85; color: white">residence
+                        <th style="font-size: 130%; background-color: #1b6d85; color: white">residence
                             time
                         </th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for object in object_list %}
-                        <tr>
+                        <tr class="gradeX">
                             <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
                             </td>
                             <td>{{ object.protein_name }}</td>
@@ -207,3 +271,26 @@
 </div>
 </body>
 </html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var scrollpos = localStorage.getItem('scrollpos');
+        if (scrollpos) window.scrollTo(0, scrollpos);
+    });
+
+    window.onbeforeunload = function (e) {
+        localStorage.setItem('scrollpos', window.scrollY);
+    };
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "searching": false
+        });
+    });
+</script>
+
