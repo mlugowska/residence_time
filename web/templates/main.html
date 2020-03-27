@@ -14,8 +14,9 @@
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="htps://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <style>
     body {
@@ -33,8 +34,8 @@
         background-position: center center;
     }
 
-    .content {
-        height: 400px;
+    section#main {
+        margin: 30px;
     }
 
     @font-face {
@@ -108,9 +109,8 @@
         color: white;
     }
 
-    a#sectionscroll {
-        color: white;
-        font-size: 2vw;
+    p#footer {
+        font-size: 1vw;
     }
 
     input[type=text] {
@@ -128,6 +128,34 @@
         font-size: 1.5vw;
     }
 
+    button#scroll[type=button] {
+        background-color: transparent;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 2vw;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
 
     @media only screen and (max-width: 600px) {
         h1 {
@@ -143,6 +171,10 @@
             font-size: 180%;
         }
 
+        p#footer {
+            font-size: 50%;
+        }
+
         input[type=text] {
             font-size: 70%;
             margin-bottom: 1em;
@@ -156,15 +188,11 @@
             font-size: 60%;
         }
 
-        a#sectionscroll {
-            font-size: 150%;
+        button#scroll[type=button] {
+            font-size: 100%;
         }
-
     }
-
-
 </style>
-
 
 <body>
 <div class="image">
@@ -216,61 +244,71 @@
         <form class="form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
             <input class="form-control" name="search" type="text"
                    placeholder="search by PDB ID, residence time, protein and ligand name" size="60">
-            <button class="btn btn-outline-success  my-2 my-sm-0" type="submit">
-                <b>GO</b></button>
+            <button class="btn btn-outline-success  my-2 my-sm-0" type="submit"
+                    onClick="document.getElementById('main').scrollIntoView();"><b>GO</b></button>
         </form>
-        <a id="sectionscroll" href="#section02">or view all complexes</a>
+        <p>or</p>
+        <button id="scroll" type="button" class="scroll-down" onclick="goDown();">view all complexes</button>
     </header>
 </div>
 
-<div class="content">
-    <div class="container" id="section02">
-        <div class="table-responsive">
-            {% if object_list %}
-                <table id="example" class="w-auto table table-hover ">
-                    <thead>
-                    <tr>
-                        <th style="font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
-                        <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
-                        <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
-                        <th style="font-size: 130%; background-color: #1b6d85; color: white">residence
-                            time
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for object in object_list %}
-                        <tr class="gradeX">
-                            <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
-                            </td>
-                            <td>{{ object.protein_name }}</td>
-                            <td>{{ object.ligand_name }}</td>
-                            <td>
-                                {% if object.residence_time_plus_minus > 0.0 %}
-                                    {{ object.residence_time|floatformat:2 }} &#177
-                                    {{ object.residence_time_plus_minus|floatformat:2 }}
-                                {% else %}
-                                    {{ object.residence_time|floatformat:2 }}
-                                {% endif %}
-                            </td>
+<section id="main">
+    <table id="example" class="w-auto table table-hover">
+        <thead>
+        <tr>
+            <th style="font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
+            <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
+            <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
+            <th style="font-size: 130%; background-color: #1b6d85; color: white">residence
+                time
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+            <tr>
+                <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
+                </td>
+                <td>{{ object.protein_name }}</td>
+                <td>{{ object.ligand_name }}</td>
+                <td>
+                    {% if object.residence_time_plus_minus > 0.0 %}
+                        {{ object.residence_time|floatformat:2 }} &#177
+                        {{ object.residence_time_plus_minus|floatformat:2 }}
+                    {% else %}
+                        {{ object.residence_time|floatformat:2 }}
+                    {% endif %}
+                </td>
 
-                            {% if user.is_superuser %}
-                                <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
-                                        class="fa fa-trash-o" style="font-size:20px;color:red">delete</i></a>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                {{ no_objects }}
-            {% endif %}
-        </div>
+                {% if user.is_superuser %}
+                    <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
+                            class="fa fa-trash-o" style="font-size:20px;color:red">delete</i></a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<footer>
+    <div class="footer-copyright">
+        <p id="footer">©2020 pdbrt.polsl.pl. All rights reserved </p>
     </div>
-</div>
+</footer>
+
 </body>
 </html>
+
+<script>
+    function goDown() {
+        window.scrollTo({
+            top: 1000,
+            left: 1000,
+            behavior: 'smooth'
+        });
+    }
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function (event) {
@@ -293,4 +331,3 @@
         });
     });
 </script>
-
