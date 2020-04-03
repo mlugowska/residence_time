@@ -46,6 +46,7 @@ class Complex(models.Model):
 
     residence_time = models.FloatField(default=0)
     residence_time_plus_minus = models.FloatField(null=True, blank=True)
+    is_calculated_from_koff = models.CharField(max_length=3, blank=True, null=True)
 
     ki = models.FloatField(default=0)
     kon = models.FloatField(default=0)

@@ -137,7 +137,7 @@
                 <table class="table">
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 130%; background-color: #1b6d85; color: white">entrance
+                            style="font-size: 130%; background-color: #1b6d85; color: white">entry
                             information
                         </th>
                     </tr>
@@ -173,21 +173,29 @@
                         <td>residence time [min]</td>
                         {% if object.residence_time > 0.0 %}
                             {% if object.residence_time_plus_minus > 0.0 %}
-                                <td>{{ object.residence_time|floatformat:2 }}
-                                    &#177 {{ object.residence_time_plus_minus|floatformat:2 }} </td>
-
+                                {% if object.is_calculated_from_koff == 'yes' %}
+                                    <td>{{ object.residence_time|floatformat:2 }}
+                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }} *calculated from k<sub>off</sub></td>
+                                {% else %}
+                                    <td>{{ object.residence_time|floatformat:2 }}
+                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }} </td>
+                                    {% endif %}
                             {% else %}
-                                <td>{{ object.residence_time|floatformat:2 }}</td>
-
+                                {% if object.is_calculated_from_koff == 'yes' %}
+                                    <td>{{ object.residence_time|floatformat:2 }} *calculated from k<sub>off</sub></td>
+                                {% else %}
+                                    <td>{{ object.residence_time|floatformat:2 }}</td>
+                                {% endif %}
                             {% endif %}
-                        {% else %}
-                            <td>n/a</td>
+                            {% else %}
+                                <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <td>primary reference</td>
                         {% if object.primary_reference %}
-                                <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term={{ object.pubmed_id }}" target="_tab">{{ object.primary_reference }}</a> </td>
+                            <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term={{ object.pubmed_id }}"
+                                   target="_tab">{{ object.primary_reference }}</a></td>
                         {% else %}
                             <td>to be published</td>
                         {% endif %}
@@ -202,9 +210,9 @@
                         <td>K<sub>i</sub> [nM]</td>
                         {% if object.ki > 0.0 %}
                             {% if object.ki_plus_minus > 0.0 %}
-                                <td>{{ object.ki|floatformat:1 }} &#177 {{ object.ki_plus_minus|floatformat:1 }}</td>
+                                <td>{{ object.ki|floatformat:3 }} &#177 {{ object.ki_plus_minus|floatformat:3}}</td>
                             {% else %}
-                                <td>{{ object.ki|floatformat:1 }}</td>
+                                <td>{{ object.ki|floatformat:3 }}</td>
                             {% endif %}
                         {% else %}
                             <td>n/a</td>
@@ -228,10 +236,10 @@
                         <td>k<sub>off</sub> [min<sup>-1</sup>]</td>
                         {% if object.koff > 0.000 %}
                             {% if object.koff_plus_minus > 0.000 %}
-                                <td>{{ object.koff|floatformat:3 }}
-                                    &#177 {{ object.koff_plus_minus|floatformat:2 }}</td>
+                                <td>{{ object.koff|floatformat:4 }}
+                                    &#177 {{ object.koff_plus_minus|floatformat:4 }}</td>
                             {% else %}
-                                <td>{{ object.koff|floatformat:3 }}</td>
+                                <td>{{ object.koff|floatformat:4 }}</td>
                             {% endif %}
                         {% else %}
                             <td>n/a</td>
