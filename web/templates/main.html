@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" content="oUkpoY85v_3G330CuV3naJPNTrnEYahbEtptVdyAsbE" />
+    <meta name="google-site-verification" content="oUkpoY85v_3G330CuV3naJPNTrnEYahbEtptVdyAsbE"/>
     <meta charset="UTF-8">
     <title>PDBrt</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,9 +35,9 @@
         background-position: center center;
     }
 
-    section#main {
-        margin: 30px;
-    }
+    {#section#main {#}
+    {#    margin: 30px;#}
+    {#}#}
 
     @font-face {
         font-family: 'Akrobat';
@@ -157,6 +157,21 @@
         background-color: #f2f2f2
     }
 
+    a#scroll:link, a#scroll:visited {
+        background-color: #1b6d85;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        font-size: 1.5vw;
+        text-decoration: none;
+        display: inline-block;
+        margin: 4px 2px;
+    }
+
+    a#scroll:hover, a#scroll:active {
+        background-color: #057496;
+    }
+
 
     @media only screen and (max-width: 600px) {
         h1 {
@@ -190,6 +205,10 @@
         }
 
         button#scroll[type=button] {
+            font-size: 100%;
+        }
+
+        a#scroll:link, a#scroll:visited {
             font-size: 100%;
         }
     }
@@ -249,12 +268,14 @@
                     onClick="document.getElementById('main').scrollIntoView();"><b>GO</b></button>
         </form>
         <p>or</p>
-        <button id="scroll" type="button" class="scroll-down" onclick="goDown();">view all complexes</button>
+        <a id="scroll" href="#main" class="smooth-goto">go to all complexes</a>
+        {#        <button id="scroll" type="button" class="scroll-down" onclick="goDown();">view all complexes</button>#}
     </header>
 </div>
 
 <section id="main">
-    <table id="example" class="w-auto table table-hover">
+<div class="container-fluid">
+    <table id="example" class="table-responsive table table-hover">
         <thead>
         <tr>
             <th style="font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
@@ -290,6 +311,7 @@
         {% endfor %}
         </tbody>
     </table>
+</div>
 </section>
 
 <footer>
@@ -302,14 +324,21 @@
 </html>
 
 <script>
-    function goDown() {
-        window.scrollTo({
-            top: 1000,
-            left: 1000,
-            behavior: 'smooth'
-        });
-    }
+    $('.smooth-goto').on('click', function () {
+        $('html, body').animate({scrollTop: $(this.hash).offset().top - 50}, 1000);
+        return false;
+    });
 </script>
+
+{#<script>#}
+{#    function goDown() {#}
+{#        window.scrollTo({#}
+{#            top: 100000,#}
+{#            left: 100000,#}
+{#            behavior: 'smooth'#}
+{#        });#}
+{#    }#}
+{#</script>#}
 
 <script>
     document.addEventListener("DOMContentLoaded", function (event) {
