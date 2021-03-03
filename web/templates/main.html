@@ -1,57 +1,363 @@
-{% extends 'base.html' %}
+{% load rest_framework %}
 
-{% block content %}
-    <div class="container">
-        <div class="container text-center" style="padding-top: 160px; padding-bottom: 60px">
-            <form class="  form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
-                <p style="font-size: 250%">PDB residence time</p>
-                <input class="form-control" name="search" type="text"
-                       placeholder="search by PDB ID, residence time, protein and ligand name" size="80"
-                       style="height: 40px" required>
-                <button class="btn btn-outline-success  my-2 my-sm-0" type="submit"
-                        style="background-color: #1b6d85; color: white"><b>Go</b></button>
-            </form>
-        </div>
-        <div class="row">
-            {% if object_list %}
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th style="width:8%; font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
-                        <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
-                        <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
-                        <th style="width:13%; font-size: 130%; background-color: #1b6d85; color: white">residence time
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for object in object_list %}
-                        <tr>
-                            <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
-                            </td>
-                            <td>{{ object.protein_name }}</td>
-                            <td>{{ object.ligand_name }}</td>
-                            <td>
-                                {% if object.residence_time_plus_minus > 0.0 %}
-                                    {{ object.residence_time|floatformat:2 }} &#177
-                                    {{ object.residence_time_plus_minus|floatformat:2 }}
-                                {% else %}
-                                    {{ object.residence_time|floatformat:2 }}
-                                {% endif %}
-                            </td>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="google-site-verification" content="oUkpoY85v_3G330CuV3naJPNTrnEYahbEtptVdyAsbE"/>
+    <meta charset="UTF-8">
+    <title>PDBrt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+    <script src="https://3Dmol.csb.pitt.edu/build/3Dmol.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
 
-                            {% if user.is_superuser %}
-                                <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
-                                        class="fa fa-trash-o" style="font-size:20px;color:red">delete</i></a>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                {{ no_objects }}
-            {% endif %}
-        </div>
+    .image {
+        width: 100vw;
+        height: 100vh;
+        background-image: url('/assets/background.png');
+        position: relative;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    {#section#main {#}
+    {#    margin: 30px;#}
+    {#}#}
+
+    @font-face {
+        font-family: 'Akrobat';
+        src: url("/assets/Akrobat-Thin.otf")
+    }
+
+    html * {
+        font-family: 'Akrobat', sans-serif;
+        font-size: large;
+        scroll-behavior: smooth;
+    }
+
+    .navbar {
+        background-color: transparent;
+        border-color: transparent;
+        padding: 10px;
+        margin: 5px;
+        align-self: center;
+    }
+
+    .navbar-brand {
+        width: 80% !important;
+        position: relative;
+        top: -40px;
+        left: 20%;
+        transform: translateX(-50%);
+    }
+
+    .navbar-default .navbar-collapse, .navbar-default .navbar-form {
+        border-color: transparent;
+    }
+
+    .dropdown-menu {
+        background-color: transparent;
+    }
+
+    .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+        background-color: black;
+        border-color: transparent;
+    }
+
+    .navbar-nav.dropdown > a:hover {
+        background-color: black;
+        border-color: transparent;
+    }
+
+    header {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        text-align: center;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 8vw;
+    }
+
+    p {
+        margin: 0;
+        font-size: 2vw;
+        width: 2000px;
+        color: #9d9d9d;
+    }
+
+    p#explore {
+        font-size: 3vw;
+        color: white;
+    }
+
+    p#footer {
+        font-size: 1vw;
+    }
+
+    input[type=text] {
+        font-size: 1.5vw;
+        height: 60px;
+        margin-bottom: 3em
+    }
+
+    button[type=submit] {
+        background-color: #1b6d85;
+        color: white;
+        height: 60px;
+        margin-bottom: 3em;
+        width: 80px;
+        font-size: 1.5vw;
+    }
+
+    button#scroll[type=button] {
+        background-color: transparent;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 2vw;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+
+    a#scroll:link, a#scroll:visited {
+        background-color: #1b6d85;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        font-size: 1.5vw;
+        text-decoration: none;
+        display: inline-block;
+        margin: 4px 2px;
+    }
+
+    a#scroll:hover, a#scroll:active {
+        background-color: #057496;
+    }
+
+
+    @media only screen and (max-width: 600px) {
+        h1 {
+            font-size: 300%;
+        }
+
+        p {
+            font-size: 100%;
+            width: 300px;
+        }
+
+        p#explore {
+            font-size: 180%;
+        }
+
+        p#footer {
+            font-size: 50%;
+        }
+
+        input[type=text] {
+            font-size: 70%;
+            margin-bottom: 1em;
+            height: 40px;
+        }
+
+        button[type=submit] {
+            height: 40px;
+            margin-bottom: 4em;
+            width: 100px;
+            font-size: 60%;
+        }
+
+        button#scroll[type=button] {
+            font-size: 100%;
+        }
+
+        a#scroll:link, a#scroll:visited {
+            font-size: 100%;
+        }
+    }
+</style>
+
+<body>
+<div class="image">
+    <div class="container" id="section01">
+        <nav class="navbar navbar-nav navbar-fixed-top navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#navbar2">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img src="/assets/logo-white.png" alt="" height="110"></a>
+            </div>
+            <div id="navbar2" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
+                           style="color: #f8f8f8; background-color: transparent">download
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{% url 'molecules:complex-export-data' %}" style="color: #f8f8f8">complex text
+                                data</a></li>
+                            <li><a href="{% url 'molecules:complex-download-zip' %}" style="color: #f8f8f8">complex
+                                files</a></li>
+                        </ul>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'molecules:complex-add' %}" style="color: #f8f8f8">add </a></li>
+                        <li><a href="{% url 'molecules:complex-import-data' %}" style="color: #f8f8f8">upload excel
+                            file</a></li>
+                        <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"
+                                                                     style="color: #f8f8f8"></span>
+                            Logout {{ user.username }}</a></li>
+                    {% else %}
+                        <li><a href="{% url 'users:login' %}" style="color: #f8f8f8"><span
+                                class="glyphicon glyphicon-log-in"></span> login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+        </nav>
     </div>
-{% endblock %}
+    <header>
+        <h1>PDBrt Database</h1>
+        <p style="margin-bottom: 3em">a free database of complexes with measured drug-target residence time</p>
+        <p id="explore">Explore the PDBrt archive</p>
+        <form class="form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
+            <input class="form-control" name="search" type="text"
+                   placeholder="search by PDB ID, residence time, protein and ligand name" size="60">
+            <button class="btn btn-outline-success  my-2 my-sm-0" type="submit"
+                    onClick="document.getElementById('main').scrollIntoView();"><b>GO</b></button>
+        </form>
+        <p>or</p>
+        <a id="scroll" href="#main" class="smooth-goto">go to all complexes</a>
+        {#        <button id="scroll" type="button" class="scroll-down" onclick="goDown();">view all complexes</button>#}
+    </header>
+</div>
+
+<section id="main">
+<div class="container-fluid">
+    <table id="example" class="table-responsive table table-hover">
+        <thead>
+        <tr>
+            <th style="font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
+            <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
+            <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
+            <th style="font-size: 130%; background-color: #1b6d85; color: white">residence
+                time
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+            <tr>
+                <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
+                </td>
+                <td>{{ object.protein_name }}</td>
+                <td>{{ object.ligand_name }}</td>
+                <td>
+                    {% if object.residence_time_plus_minus > 0.0 %}
+                        {{ object.residence_time|floatformat:2 }} &#177
+                        {{ object.residence_time_plus_minus|floatformat:2 }}
+                    {% else %}
+                        {{ object.residence_time|floatformat:2 }}
+                    {% endif %}
+                </td>
+
+                {% if user.is_superuser %}
+                    <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
+                            class="fa fa-trash-o" style="font-size:20px;color:red"></i></a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</section>
+
+<footer>
+    <div class="footer-copyright">
+        <p id="footer">©2020 pdbrt.polsl.pl. All rights reserved </p>
+    </div>
+</footer>
+
+</body>
+</html>
+
+<script>
+    $('.smooth-goto').on('click', function () {
+        $('html, body').animate({scrollTop: $(this.hash).offset().top - 50}, 1000);
+        return false;
+    });
+</script>
+
+{#<script>#}
+{#    function goDown() {#}
+{#        window.scrollTo({#}
+{#            top: 100000,#}
+{#            left: 100000,#}
+{#            behavior: 'smooth'#}
+{#        });#}
+{#    }#}
+{#</script>#}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var scrollpos = localStorage.getItem('scrollpos');
+        if (scrollpos) window.scrollTo(0, scrollpos);
+    });
+
+    window.onbeforeunload = function (e) {
+        localStorage.setItem('scrollpos', window.scrollY);
+    };
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "searching": false
+        });
+    });
+</script>

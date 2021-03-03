@@ -2,9 +2,6 @@ FROM nginx
 
 ARG NGINX_CONFIG=nginx.conf
 
-WORKDIR /etc/nginx/ssl
-RUN apt-get update
-
 WORKDIR /nginx
 
 RUN rm /etc/nginx/conf.d/*

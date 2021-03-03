@@ -41,13 +41,14 @@ class ComplexResource(resources.ModelResource):
     koff_plus_minus = Field(column_name='Koff Plus Minus', attribute='koff_plus_minus')
     primary_reference = Field(column_name='Primary Reference', attribute='primary_reference')
     pubmed_id = Field(column_name='PubMed ID', attribute='pubmed_id')
+    is_calculated_from_koff = Field(column_name='is calculated from koff', attribute='is_calculated_from_koff')
 
     class Meta:
         model = Complex
         fields = ('ligand_name', 'ligand_inchi', 'ligand_smiles', 'ligand_formula', 'ligand_code', 'protein_name',
                   'protein_organism', 'name', 'pdb_id', 'release_year', 'primary_reference', 'residence_time',
                   'residence_time_plus_minus', 'ki', 'kon', 'koff', 'ki_plus_minus', 'koff_plus_minus',
-                  'kon_ten_to_power', 'pubmed_id',)
+                  'kon_ten_to_power', 'pubmed_id', 'is_calculated_from_koff',)
         export_order = ('pdb_id', 'residence_time', 'residence_time_plus_minus',)
         import_id_fields = ('pdb_id',)
         import_id_field = 'pdb_id'
