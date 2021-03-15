@@ -16,4 +16,3 @@ pyyaml
 openpyxl
 MarkupPy
 wheel
-openbabel==2.4.1

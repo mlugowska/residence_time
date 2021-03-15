@@ -60,6 +60,7 @@ class Complex(models.Model):
         if self.file:
             self.file.delete()
         if self.ligand:
+            self.ligand.file.delete()
             self.ligand.delete()
         if self.protein:
             self.protein.delete()
