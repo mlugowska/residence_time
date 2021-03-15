@@ -11,13 +11,15 @@
     <script src="https://3Dmol.csb.pitt.edu/build/3Dmol.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
 </head>
 <style>
     body {
@@ -37,7 +39,8 @@
 
     {#section#main {#}
     {#    margin: 30px;#}
-    {#}#}
+    {
+    #}#}
 
     @font-face {
         font-family: 'Akrobat';
@@ -274,44 +277,44 @@
 </div>
 
 <section id="main">
-<div class="container-fluid">
-    <table id="example" class="table-responsive table table-hover">
-        <thead>
-        <tr>
-            <th style="font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
-            <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
-            <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
-            <th style="font-size: 130%; background-color: #1b6d85; color: white">residence
-                time
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for object in object_list %}
+    <div class="container-fluid">
+        <table id="example" class="table-responsive table table-hover">
+            <thead>
             <tr>
-                <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
-                </td>
-                <td>{{ object.protein_name }}</td>
-                <td>{{ object.ligand_name }}</td>
-                <td>
-                    {% if object.residence_time_plus_minus > 0.0 %}
-                        {{ object.residence_time|floatformat:2 }} &#177
-                        {{ object.residence_time_plus_minus|floatformat:2 }}
-                    {% else %}
-                        {{ object.residence_time|floatformat:2 }}
-                    {% endif %}
-                </td>
-
-                {% if user.is_superuser %}
-                    <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
-                            class="fa fa-trash-o" style="font-size:20px;color:red"></i></a>
-                    </td>
-                {% endif %}
+                <th style="font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
+                <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
+                <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
+                <th style="font-size: 130%; background-color: #1b6d85; color: white">residence
+                    time
+                </th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
+                    </td>
+                    <td>{{ object.protein_name }}</td>
+                    <td>{{ object.ligand_name }}</td>
+                    <td>
+                        {% if object.residence_time_plus_minus > 0.0 %}
+                            {{ object.residence_time|floatformat:2 }} &#177
+                            {{ object.residence_time_plus_minus|floatformat:2 }}
+                        {% else %}
+                            {{ object.residence_time|floatformat:2 }}
+                        {% endif %}
+                    </td>
+
+                    {% if user.is_superuser %}
+                        <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
+                                class="fa fa-trash-o" style="font-size:20px;color:red"></i></a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </section>
 
 <footer>
