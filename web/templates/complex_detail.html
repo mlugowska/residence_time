@@ -114,7 +114,7 @@
         <div class="col-lg-4 col-lg-offset-2 text-center" style="background-color: white">
             <div style="text-align: left">
                 <a href="javascript:history.back()" class="previous">&laquo; back</a></div>
-            <h2><a href="https://www.rcsb.org/structure/{{ object.pdb_id }}" style="font-size: 300%">{{ object.pdb_id }}</a> </h2>
+            <h2 style="font-size: 400%">{{ object.pdb_id }}</h2>
             <div id="gldiv" class=" mol-container"></div>
             <br>
             <input type="button" value="stick" style="background-color: black; color: white;"
@@ -175,11 +175,12 @@
                             {% if object.residence_time_plus_minus > 0.0 %}
                                 {% if object.is_calculated_from_koff == 'yes' %}
                                     <td>{{ object.residence_time|floatformat:2 }}
-                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }} *calculated from k<sub>off</sub></td>
+                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }} *calculated from
+                                        k<sub>off</sub></td>
                                 {% else %}
                                     <td>{{ object.residence_time|floatformat:2 }}
                                         &#177 {{ object.residence_time_plus_minus|floatformat:2 }} </td>
-                                    {% endif %}
+                                {% endif %}
                             {% else %}
                                 {% if object.is_calculated_from_koff == 'yes' %}
                                     <td>{{ object.residence_time|floatformat:2 }} *calculated from k<sub>off</sub></td>
@@ -187,8 +188,8 @@
                                     <td>{{ object.residence_time|floatformat:2 }}</td>
                                 {% endif %}
                             {% endif %}
-                            {% else %}
-                                <td>n/a</td>
+                        {% else %}
+                            <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
@@ -264,6 +265,19 @@
                         <td>InChI</td>
                         <td>{{ object.ligand.inchi }}</td>
                     </tr>
+                    <tr>
+                        <th colspan="2" class="label_text"
+                            style="font-size: 130%; background-color: #1b6d85; color: white">external databases
+                        </th>
+                    </tr>
+                    <tr>
+                        <td><a href="https://www.rcsb.org/structure/{{ object.pdb_id }}" target="_blank">RCSB PDB</a></td>
+                        <td>The Protein Data Bank</td>
+                    </tr>
+                <tr>
+                    <td><a href="http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/pdbsum/GetPage.pl?pdbcode={{ object.pdb_id }}" target="_blank">PDBsum</a></td>
+                    <td>Enhanced annotations on PDB entries</td>
+                </tr>
                 </table>
             </form>
         </div>
