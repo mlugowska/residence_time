@@ -1,5 +1,5 @@
-django==2.2.13
-djangorestframework==3.10.3
+django==2.2.18
+djangorestframework==3.11.2
 django-filter
 psycopg2
 django-import-export==1.2.0
