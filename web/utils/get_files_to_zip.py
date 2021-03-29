@@ -3,6 +3,8 @@ import shutil
 
 from django.conf import settings
 from django.http import FileResponse
+from setuptools import glob
+
 from utils.filename_parsers import parse_filename
 
 
@@ -17,7 +19,7 @@ def download_file(instance):
 
 def copy_files_to_current_dir(files):
     for file in files:
-        shutil.copy(os.path.join(settings.MEDIA_ROOT, file.name), os.getcwd())
+        shutil.copy(file, os.getcwd())
 
 
 def create_dir_with_structure_files(queryset):
@@ -27,7 +29,6 @@ def create_dir_with_structure_files(queryset):
         os.mkdir(os.path.join(settings.MEDIA_ROOT, 'structures', name))
         os.chdir(os.path.join(settings.MEDIA_ROOT, 'structures', name))
 
-        instance = queryset.get(pdb_id=name)
-
-        files = [instance.file, instance.protein.file, instance.ligand.file]
+        files = glob.glob(os.path.join(settings.MEDIA_ROOT, '**', f'{name}*.*'), recursive=True)
         copy_files_to_current_dir(files)
+
