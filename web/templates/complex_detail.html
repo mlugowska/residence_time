@@ -88,11 +88,12 @@
         <div id="navbar2" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">download
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">download files
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'molecules:complex-export-data' %}">complex text data</a></li>
-                        <li><a href="{% url 'molecules:complex-download-zip' %}">complex files</a></li>
+{#                        <li><a href="{% url 'molecules:complex-export-data' %}">all data - text format</a></li>#}
+{#                        <li><a href="{% url 'molecules:complex-download-zip' 'multiple' %}">all data - PDB/SDF format</a></li>#}
+                        <li><a href="{% url 'molecules:complex-download-zip' object.pdb_id %}">PDB/SDF format</a></li>
                     </ul>
                 </li>
                 {% if user.is_authenticated %}

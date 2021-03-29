@@ -1,7 +1,6 @@
 import os
 import shutil
 from shutil import make_archive
-from typing import Any
 from wsgiref.util import FileWrapper
 
 from django.conf import settings
@@ -14,6 +13,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.request import Request
 from rest_framework.response import Response
+from typing import Any
 
 from molecules.excel.resources import ComplexResource
 from molecules.excel.utils import binary_excel_to_df, df_to_dataset, collect_excel_import_errors
@@ -117,13 +117,21 @@ class ComplexViewSet(viewsets.ModelViewSet):
 
         return Response(template_name='import.html')
 
-    @action(methods=('get',), detail=False, url_path='download-zip')
-    def download_zip(self, request: Request):
+    @action(methods=('get',), detail=False, url_path='download-zip/(?P<mode>[a-zA-Z0-9]+)')
+    def download_zip(self, request: Request, mode, *args: Any, **kwargs: Any):
         shutil.rmtree(os.path.join(settings.MEDIA_ROOT, 'structures'), ignore_errors=True)
-        create_dir_with_structure_files(queryset=Complex.objects.all())
 
-        files_path = os.path.join(settings.MEDIA_ROOT, 'structures')
+        if mode == 'all':
+            create_dir_with_structure_files(queryset=Complex.objects.all())
+            files_path = os.path.join(settings.MEDIA_ROOT, 'structures')
+            filename = 'structures'
+        else:
+            queryset = Complex.objects.filter(pdb_id=mode)
+            create_dir_with_structure_files(queryset=queryset)
+            filename = queryset[0].pdb_id
+            files_path = os.path.join(settings.MEDIA_ROOT, 'structures', filename)
+
         path_to_zip = make_archive(files_path, 'zip', files_path)
         response = HttpResponse(FileWrapper(open(path_to_zip, 'rb')), content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="structures.zip"'
+        response['Content-Disposition'] = f'attachment; filename="{filename}.zip"'
         return response
