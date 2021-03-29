@@ -72,7 +72,7 @@
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{% url 'molecules:complex-export-data' %}">complex text data</a></li>
-                        <li><a href="{% url 'molecules:complex-download-zip' %}">complex files</a></li>
+                        <li><a href="{% url 'molecules:complex-download-zip' 'all' %}">complex files</a></li>
                     </ul>
                 </li>
                 {% if user.is_authenticated %}
