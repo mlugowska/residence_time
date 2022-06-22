@@ -4,7 +4,7 @@ django-filter
 psycopg2
 django-import-export==1.2.0
 pandas
-numpy==1.17.4
+numpy==1.22.0
 tablib
 biopython
 uwsgi==2.0.15
