@@ -1,6 +1,5 @@
 {% load rest_framework %}
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta name="google-site-verification" content="oUkpoY85v_3G330CuV3naJPNTrnEYahbEtptVdyAsbE"/>
@@ -34,7 +33,7 @@
         position: relative;
         background-size: cover;
         background-repeat: no-repeat;
-        background-position: center center;
+        background-position: center;
     }
 
     {#section#main {#}
@@ -43,12 +42,12 @@
     #}#}
 
     @font-face {
-        font-family: 'Akrobat';
-        src: url("/assets/Akrobat-Thin.otf")
+        font-family: Barlow SCK;
+        src: url("/assets/barlow/BarlowSemiCondensed-Light.otf")
     }
 
     html * {
-        font-family: 'Akrobat', sans-serif;
+        font-family: Barlow SCK;
         font-size: large;
         scroll-behavior: smooth;
     }
@@ -109,7 +108,7 @@
     }
 
     p#explore {
-        font-size: 3vw;
+        font-size: 2.5vw;
         color: white;
     }
 
@@ -215,6 +214,7 @@
             font-size: 100%;
         }
     }
+
 </style>
 
 <body>
@@ -238,21 +238,33 @@
                            style="color: #f8f8f8; background-color: transparent">download files
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{% url 'molecules:complex-export-data' %}" style="color: #f8f8f8">text format</a></li>
-                            <li><a href="{% url 'molecules:complex-download-zip' 'all' %}" style="color: #f8f8f8">PDB/SDF format
-                                </a></li>
+                            <li><a href="{% url 'molecules:complex-export-data' %}" style="color: #f8f8f8">text
+                                format</a></li>
+                            <li><a href="{% url 'molecules:complex-download-zip' 'all' %}" style="color: #f8f8f8">PDB/SDF
+                                format
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
+                           style="color: #f8f8f8; background-color: transparent">help
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{% url 'help:get_started' %}" style="color: #f8f8f8">get started</a></li>
+                            <li><a href="{% url 'help:how_to_search' %}" style="color: #f8f8f8">how to search</a></li>
+                            <li><a href="{% url 'help:explore_entry' %}" style="color: #f8f8f8">explore PDBrt entry</a></li>
                         </ul>
                     </li>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'molecules:complex-add' %}" style="color: #f8f8f8">add </a></li>
-                        <li><a href="{% url 'molecules:complex-import-data' %}" style="color: #f8f8f8">upload excel
-                            file</a></li>
-                        <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"
-                                                                     style="color: #f8f8f8"></span>
-                            Logout {{ user.username }}</a></li>
+                    <li><a href="{% url 'molecules:complex-add' %}" style="color: #f8f8f8">add </a></li>
+                    <li><a href="{% url 'molecules:complex-import-data' %}" style="color: #f8f8f8">upload excel
+                        file</a></li>
+                    <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"
+                                                                 style="color: #f8f8f8"></span>
+                        Logout {{ user.username }}</a></li>
                     {% else %}
-                        <li><a href="{% url 'users:login' %}" style="color: #f8f8f8"><span
-                                class="glyphicon glyphicon-log-in"></span> login</a></li>
+                    <li><a href="{% url 'users:login' %}" style="color: #f8f8f8"><span
+                            class="glyphicon glyphicon-log-in"></span> login</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -270,8 +282,8 @@
                     onClick="document.getElementById('main').scrollIntoView();"><b>GO</b></button>
         </form>
         <p>or</p>
+        <br>
         <a id="scroll" href="#main" class="smooth-goto">go to all complexes</a>
-        {#        <button id="scroll" type="button" class="scroll-down" onclick="goDown();">view all complexes</button>#}
     </header>
 </div>
 
@@ -284,32 +296,32 @@
                 <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
                 <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
                 <th style="font-size: 130%; background-color: #1b6d85; color: white">residence
-                    time
+                    time [min]
                 </th>
             </tr>
             </thead>
             <tbody>
             {% for object in object_list %}
-                <tr>
-                    <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
-                    </td>
-                    <td>{{ object.protein_name }}</td>
-                    <td>{{ object.ligand_name }}</td>
-                    <td>
-                        {% if object.residence_time_plus_minus > 0.0 %}
-                            {{ object.residence_time|floatformat:2 }} &#177
-                            {{ object.residence_time_plus_minus|floatformat:2 }}
-                        {% else %}
-                            {{ object.residence_time|floatformat:2 }}
-                        {% endif %}
-                    </td>
-
-                    {% if user.is_superuser %}
-                        <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
-                                class="fa fa-trash-o" style="font-size:20px;color:red"></i></a>
-                        </td>
+            <tr>
+                <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
+                </td>
+                <td>{{ object.protein_name }}</td>
+                <td>{{ object.ligand_name }}</td>
+                <td>
+                    {% if object.residence_time_plus_minus > 0.0 %}
+                    {{ object.residence_time|floatformat:2 }} &#177
+                    {{ object.residence_time_plus_minus|floatformat:2 }}
+                    {% else %}
+                    {{ object.residence_time|floatformat:2 }}
                     {% endif %}
-                </tr>
+                </td>
+
+                {% if user.is_superuser %}
+                <td><a href="{% url 'molecules:complex-delete' object.pdb_id %}"><i
+                        class="fa fa-trash-o" style="font-size:20px;color:red"></i></a>
+                </td>
+                {% endif %}
+            </tr>
             {% endfor %}
             </tbody>
         </table>
@@ -330,9 +342,11 @@
         $('html, body').animate({scrollTop: $(this.hash).offset().top - 50}, 1000);
         return false;
     });
+
 </script>
 
-{#<script>#}
+{#
+<script>#}
 {#    function goDown() {#}
 {#        window.scrollTo({#}
 {#            top: 100000,#}
@@ -340,7 +354,8 @@
 {#            behavior: 'smooth'#}
 {#        });#}
 {#    }#}
-{#</script>#}
+{#
+</script>#}
 
 <script>
     document.addEventListener("DOMContentLoaded", function (event) {
@@ -351,6 +366,7 @@
     window.onbeforeunload = function (e) {
         localStorage.setItem('scrollpos', window.scrollY);
     };
+
 </script>
 
 <script>
@@ -362,4 +378,5 @@
             "searching": false
         });
     });
+
 </script>

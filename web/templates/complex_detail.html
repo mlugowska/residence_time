@@ -1,6 +1,5 @@
 {% load rest_framework %}
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -40,12 +39,12 @@
     }
 
     @font-face {
-        font-family: Akrobat;
-        src: url("/assets/Akrobat-Thin.otf")
+        font-family: Barlow SCK;
+        src: url("/assets/barlow/BarlowSemiCondensed-ExtraLight.otf")
     }
 
     html * {
-        font-family: Akrobat;
+        font-family: Barlow SCK;
         font-size: large;
     }
 
@@ -71,6 +70,7 @@
         background-color: #888; /*Background color for bar in the holder*/
     }
 
+
 </style>
 <body>
 <nav class="navbar navbar-nav navbar-default navbar-fixed-top">
@@ -95,14 +95,25 @@
                         <li><a href="{% url 'molecules:complex-download-zip' object.pdb_id %}">PDB/SDF format</a></li>
                     </ul>
                 </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">help
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'help:get_started' %}">get started</a></li>
+                        <li><a href="{% url 'help:how_to_search' %}">how to search</a></li>
+                        <li><a href="{% url 'help:explore_entry' %}">explore PDBrt entry</a></li>
+                    </ul>
+                </li>
+
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'molecules:complex-add' %}">add </a></li>
-                    <li><a href="{% url 'molecules:complex-import-data' %}">upload excel file</a></li>
-                    <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
-                        Logout {{ user.username }}</a></li>
+                <li><a href="{% url 'molecules:complex-add' %}">add </a></li>
+                <li><a href="{% url 'molecules:complex-import-data' %}">upload excel file</a></li>
+                <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
+                    Logout {{ user.username }}</a></li>
                 {% else %}
-                    <li><a href="{% url 'users:login' %}"><span
-                            class="glyphicon glyphicon-log-in"></span> login</a></li>
+                <li><a href="{% url 'users:login' %}"><span
+                        class="glyphicon glyphicon-log-in"></span> login</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -151,54 +162,55 @@
                         <td>protein name</td>
                         <td>
                             {% if object.protein.name %}
-                                <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
-                                </td>
-                            {% else %}
-                                <td>n/a</td>
-                            {% endif %}
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
+                        </td>
+                        {% else %}
+                        <td>n/a</td>
+                        {% endif %}
 
                     </tr>
                     <tr>
                         <td>ligand name</td>
                         <td>
                             {% if object.ligand.name %}
-                                <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
-                                </td>
-                            {% else %}
-                                <td>n/a</td>
-                            {% endif %}
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
+                        </td>
+                        {% else %}
+                        <td>n/a</td>
+                        {% endif %}
 
                     </tr>
                     <tr>
                         <td>residence time [min]</td>
                         {% if object.residence_time > 0.0 %}
-                            {% if object.residence_time_plus_minus > 0.0 %}
-                                {% if object.is_calculated_from_koff == 'yes' %}
-                                    <td>{{ object.residence_time|floatformat:2 }}
-                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }} *calculated from
-                                        k<sub>off</sub></td>
-                                {% else %}
-                                    <td>{{ object.residence_time|floatformat:2 }}
-                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }} </td>
-                                {% endif %}
-                            {% else %}
-                                {% if object.is_calculated_from_koff == 'yes' %}
-                                    <td>{{ object.residence_time|floatformat:2 }} *calculated from k<sub>off</sub></td>
-                                {% else %}
-                                    <td>{{ object.residence_time|floatformat:2 }}</td>
-                                {% endif %}
-                            {% endif %}
+                        {% if object.residence_time_plus_minus > 0.0 %}
+                        {% if object.is_calculated_from_koff == 'yes' %}
+                        <td>{{ object.residence_time|floatformat:2 }}
+                            &#177 {{ object.residence_time_plus_minus|floatformat:2 }} *calculated from
+                            k<sub>off</sub></td>
                         {% else %}
-                            <td>n/a</td>
+                        <td>{{ object.residence_time|floatformat:2 }}
+                            &#177 {{ object.residence_time_plus_minus|floatformat:2 }}
+                        </td>
+                        {% endif %}
+                        {% else %}
+                        {% if object.is_calculated_from_koff == 'yes' %}
+                        <td>{{ object.residence_time|floatformat:2 }} *calculated from k<sub>off</sub></td>
+                        {% else %}
+                        <td>{{ object.residence_time|floatformat:2 }}</td>
+                        {% endif %}
+                        {% endif %}
+                        {% else %}
+                        <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <td>primary reference</td>
                         {% if object.primary_reference %}
-                            <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term={{ object.pubmed_id }}"
-                                   target="_tab">{{ object.primary_reference }}</a></td>
+                        <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term={{ object.pubmed_id }}"
+                               target="_tab">{{ object.primary_reference }}</a></td>
                         {% else %}
-                            <td>to be published</td>
+                        <td>to be published</td>
                         {% endif %}
                     </tr>
                     <tr>
@@ -210,40 +222,41 @@
                     <tr>
                         <td>K<sub>i</sub> [nM]</td>
                         {% if object.ki > 0.0 %}
-                            {% if object.ki_plus_minus > 0.0 %}
-                                <td>{{ object.ki|floatformat:3 }} &#177 {{ object.ki_plus_minus|floatformat:3}}</td>
-                            {% else %}
-                                <td>{{ object.ki|floatformat:3 }}</td>
-                            {% endif %}
+                        {% if object.ki_plus_minus > 0.0 %}
+                        <td>{{ object.ki|floatformat:3 }} &#177 {{ object.ki_plus_minus|floatformat:3}}</td>
                         {% else %}
-                            <td>n/a</td>
+                        <td>{{ object.ki|floatformat:3 }}</td>
+                        {% endif %}
+                        {% else %}
+                        <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <td>k<sub>on</sub> [min<sup>-1</sup>M<sup>-1</sup>]</td>
                         {% if object.kon > 0.0 %}
-                            {% if object.kon_plus_minus > 0.0 %}
-                                <td>{{ object.kon }} &#177 {{ object.kon_plus_minus|floatformat:2 }} &times
-                                    10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup></td>
-                            {% else %}
-                                <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup>
-                                </td>
-                            {% endif %}
+                        {% if object.kon_plus_minus > 0.0 %}
+                        <td>{{ object.kon }} &#177 {{ object.kon_plus_minus|floatformat:2 }} &times
+                            10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup></td>
                         {% else %}
-                            <td>n/a</td>
+                        <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup>
+                        </td>
+                        {% endif %}
+                        {% else %}
+                        <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <td>k<sub>off</sub> [min<sup>-1</sup>]</td>
                         {% if object.koff > 0.000 %}
-                            {% if object.koff_plus_minus > 0.000 %}
-                                <td>{{ object.koff|floatformat:4 }}
-                                    &#177 {{ object.koff_plus_minus|floatformat:4 }}</td>
-                            {% else %}
-                                <td>{{ object.koff|floatformat:4 }}</td>
-                            {% endif %}
+                        {% if object.koff_plus_minus > 0.000 %}
+                        <td>{{ object.koff|floatformat:4 }}
+                            &#177 {{ object.koff_plus_minus|floatformat:4 }}
+                        </td>
                         {% else %}
-                            <td>n/a</td>
+                        <td>{{ object.koff|floatformat:4 }}</td>
+                        {% endif %}
+                        {% else %}
+                        <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
@@ -414,4 +427,5 @@
         });
 
     });
+
 </script>

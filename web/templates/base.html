@@ -4,12 +4,12 @@
 
 <style>
     @font-face {
-        font-family: Akrobat;
-        src: url("/assets/Akrobat-Thin.otf")
+        font-family: Barlow SCK;
+        src: url("/assets/barlow/BarlowSemiCondensed-ExtraLight.otf")
     }
 
     html * {
-        font-family: Akrobat;
+        font-family: Barlow SCK;
         font-size: large;
     }
 
@@ -19,7 +19,7 @@
     }
 
     .navbar {
-        background-color: lightgray;
+        background-color: black;
         padding: 25px;
         align-self: center;
     }
@@ -38,6 +38,7 @@
     .custom-nav-bar.navbar-toggle .icon-bar {
         background-color: #888;
     }
+
 </style>
 <head>
     <meta charset="UTF-8">
@@ -75,14 +76,23 @@
                         <li><a href="{% url 'molecules:complex-download-zip' 'all' %}">complex files</a></li>
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">help
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'help:get_started' %}">get started</a></li>
+                        <li><a href="{% url 'help:how_to_search' %}">how to search</a></li>
+                        <li><a href="{% url 'help:explore_entry' %}">explore PDBrt entry</a></li>
+                    </ul>
+                </li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'molecules:complex-add' %}">add </a></li>
-                    <li><a href="{% url 'molecules:complex-import-data' %}">upload excel file</a></li>
-                    <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
-                        Logout {{ user.username }}</a></li>
+                <li><a href="{% url 'molecules:complex-add' %}">add </a></li>
+                <li><a href="{% url 'molecules:complex-import-data' %}">upload excel file</a></li>
+                <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
+                    Logout {{ user.username }}</a></li>
                 {% else %}
-                    <li><a href="{% url 'users:login' %}"><span
-                            class="glyphicon glyphicon-log-in"></span> login</a></li>
+                <li><a href="{% url 'users:login' %}"><span
+                        class="glyphicon glyphicon-log-in"></span> login</a></li>
                 {% endif %}
             </ul>
         </div>
