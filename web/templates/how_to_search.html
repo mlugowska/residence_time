@@ -10,7 +10,7 @@
 
     th {
         font-size: 150%;
-        background-color: #1b6d85;
+        background-color: #003c49;
         color: white;
         padding: 5px;
         text-align: center;
@@ -21,7 +21,7 @@
         height: auto;
     }
 
-    span {
+    .bold {
         font-weight: 950;
         font-size: 150%;
     }
@@ -29,9 +29,24 @@
     b {
         font-weight: 950;
         font-size: 100%;
-
     }
+
+    a {
+        font-size: 130%;
+    }
+
+    @media only screen and (max-width: 600px) {
+    table {
+        width: 100%;
+    }
+
+    td {
+        display: block;
+        width: 100%;
+    }
+}
 </style>
+
 <div class="container">
     <div class="container text-center" style="padding-top: 160px; padding-left: 0px">
         <div style="text-align: left">
@@ -40,18 +55,18 @@
         <br>
     </div>
 
-    <table class="table">
+    <table class="table table-responsive">
         <tr>
             <th colspan="1" class="label_text">Find your data</th>
         </tr>
         <tr>
             <td>
-                <p>The pdbrt.polsl.pl website provides all users option to freely search, explore and view structures
-                    with known residence time. The homepage provides some general information about all available structures in tabular format, and
+                <p>The PDBrt website provides all users option to freely search, explore and view structures
+                    with known residence time. On the homepage you start with some general information about all available structures in tabular format, and
                     have the possibility to download whole sets of data files for result sets consisting of multiple
                     PDBrt entries.</p>
                 <br>
-                <p><span>Search Options</span></p>
+                <p><span class="bold">Search Options</span></p>
                 <p>Specific information about the molecule(s) of interest can be used to query the 3D structure archive
                     via basic search. Basic search can be run from the homepage
                     by simply typing a search term (PDB ID, protein or ligand name, residence time) into the Search Bar
@@ -62,7 +77,7 @@
                 <br>
                 <br>
                 <br>
-                <p><span>Query Results</span></p>
+                <p><span class="bold">Query Results</span></p>
                 <p>Once a search query has been executed using Bar Search "go to all complexes" clicked, you will be taken down the page to the table with the results list.
                     The results show information such as PDB ID, protein name, ligand name and residence time in minutes.
                 Once a structure of interest has been identified you can examine it carefully and/or download structure related files for exploration and analysis.

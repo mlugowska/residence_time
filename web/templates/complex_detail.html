@@ -70,10 +70,29 @@
         background-color: #888; /*Background color for bar in the holder*/
     }
 
-    td, a {
-        font-size: 130%
+    td {
+        font-size: 130%;
     }
 
+    td:first-child {
+        border-left: none;
+    }
+
+    @media only screen and (max-width: 600px) {
+        table {
+            width: 100%;
+        }
+
+        td {
+            display: block;
+            width: 100%;
+        }
+
+        tr {
+            display: block;
+            margin-bottom: 30px;
+        }
+    }
 
 </style>
 <body>
@@ -92,30 +111,30 @@
         <div id="navbar2" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Download complex data
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="font-size: 130%">Download complex data
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'molecules:complex-download-zip' object.pdb_id %}">PDB/SDF format</a></li>
+                        <li><a href="{% url 'molecules:complex-download-zip' object.pdb_id %}" style="font-size: 130%">PDB/SDF format</a></li>
                     </ul>
                 </li>
 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="font-size: 130%">Help
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'help:get_started' %}">Get started</a></li>
-                        <li><a href="{% url 'help:how_to_search' %}">How to search?</a></li>
-                        <li><a href="{% url 'help:explore_entry' %}">Explore PDBrt entry</a></li>
+                        <li><a href="{% url 'help:get_started' %}" style="font-size: 130%">Get started</a></li>
+                        <li><a href="{% url 'help:how_to_search' %}" style="font-size: 130%">How to search?</a></li>
+                        <li><a href="{% url 'help:explore_entry' %}" style="font-size: 130%">Explore PDBrt entry</a></li>
                     </ul>
                 </li>
 
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'molecules:complex-add' %}">Add </a></li>
-                <li><a href="{% url 'molecules:complex-import-data' %}">Upload xlsx file</a></li>
+                <li><a href="{% url 'molecules:complex-add' %}" style="font-size: 130%">Add </a></li>
+                <li><a href="{% url 'molecules:complex-import-data' %}" style="font-size: 130%">Upload xlsx file</a></li>
                 <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
                     Logout {{ user.username }}</a></li>
                 {% else %}
-                <li><a href="{% url 'users:login' %}"><span
+                <li><a href="{% url 'users:login' %}" style="font-size: 130%"><span
                         class="glyphicon glyphicon-log-in"></span> Login</a></li>
                 {% endif %}
             </ul>
@@ -127,7 +146,7 @@
     <div class="row col-lg-12">
         <div class="col-lg-4 col-lg-offset-2 text-center" style="background-color: white">
             <div style="text-align: left">
-                <a href="javascript:history.back()" class="previous">&laquo; back</a></div>
+                <a href="javascript:history.back()" class="previous" style="font-size: 130%">&laquo; back</a></div>
             <h2 style="font-size: 500%">{{ object.pdb_id }}</h2>
             <div id="gldiv" class=" mol-container"></div>
             <br>
@@ -151,21 +170,21 @@
                 <table class="table">
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 150%; background-color: #1b6d85; color: white">Entry
+                            style="font-size: 150%; background-color: #003c49; color: white">Entry
                             information
                         </th>
                     </tr>
                     <tr>
                         <td>PDB ID</td>
                         <td>
-                            <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}">{{ object.pdb_id }}</a>
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}" style="font-size: 120%">{{ object.pdb_id }}</a>
                         </td>
                     </tr>
                     <tr>
                         <td>Protein name</td>
                         <td>
                             {% if object.protein.name %}
-                            <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}" style="font-size: 120%">{{ object.protein.name }}</a>
                         </td>
                         {% else %}
                         <td>n/a</td>
@@ -176,7 +195,7 @@
                         <td>Ligand name</td>
                         <td>
                             {% if object.ligand.name %}
-                            <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}" style="font-size: 120%">{{ object.ligand.name }}</a>
                         </td>
                         {% else %}
                         <td>n/a</td>
@@ -211,14 +230,14 @@
                         <td>Primary reference</td>
                         {% if object.primary_reference %}
                         <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term={{ object.pubmed_id }}"
-                               target="_tab">{{ object.primary_reference }}</a></td>
+                               target="_tab" style="font-size: 120%">{{ object.primary_reference }}</a></td>
                         {% else %}
                         <td>to be published</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 150%; background-color: #1b6d85; color: white">Additional
+                            style="font-size: 150%; background-color: #003c49; color: white">Additional
                             parameters
                         </th>
                     </tr>
@@ -264,7 +283,7 @@
                     </tr>
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 150%; background-color: #1b6d85; color: white">Ligand
+                            style="font-size: 150%; background-color: #003c49; color: white">Ligand
                             properties
                         </th>
                     </tr>
@@ -283,29 +302,29 @@
                     </tr>
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 150%; background-color: #1b6d85; color: white">External databases
+                            style="font-size: 150%; background-color: #003c49; color: white">External databases
                         </th>
                     </tr>
                     <tr>
-                        <td><a href="https://www.rcsb.org/structure/{{ object.pdb_id }}" target="_blank">RCSB PDB</a>
+                        <td><a href="https://www.rcsb.org/structure/{{ object.pdb_id }}" target="_blank" style="font-size: 120%">RCSB PDB</a>
                         </td>
                         <td>The Protein Data Bank</td>
                     </tr>
                     <tr>
                         <td>
-                            <a href="https://pdbj.org/mine/summary/{{ object.pdb_id }}" target="_blank">PDBj</a></td>
+                            <a href="https://pdbj.org/mine/summary/{{ object.pdb_id }}" target="_blank" style="font-size: 120%">PDBj</a></td>
                         <td>The Protein Data Bank Japan</td>
                     </tr>
                     <tr>
                         <td>
-                            <a href="https://www.ebi.ac.uk/pdbe/entry/pdb/{{ object.pdb_id }}" target="_blank">PDBe</a>
+                            <a href="https://www.ebi.ac.uk/pdbe/entry/pdb/{{ object.pdb_id }}" target="_blank" style="font-size: 120%">PDBe</a>
                         </td>
                         <td>The Protein Data Bank in Europe</td>
                     </tr>
                     <tr>
                         <td>
                             <a href="http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/pdbsum/GetPage.pl?pdbcode={{ object.pdb_id }}"
-                               target="_blank">PDBsum</a></td>
+                               target="_blank" style="font-size: 120%">PDBsum</a></td>
                         <td>Enhanced annotations on PDB entries</td>
                     </tr>
                 </table>

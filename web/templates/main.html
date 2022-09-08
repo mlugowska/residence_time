@@ -144,10 +144,11 @@
         color: white;
     }
 
-    table {
+    .table {
         border-collapse: collapse;
         border-spacing: 0;
-        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
     }
 
     th, td {
@@ -158,6 +159,10 @@
 
     tr:nth-child(even) {
         background-color: #f2f2f2
+    }
+
+    a {
+        font-size: 130%;
     }
 
     a#scroll:link, a#scroll:visited {
@@ -214,9 +219,26 @@
         a#scroll:link, a#scroll:visited {
             font-size: 100%;
         }
+
+        table {
+            width: 100%;
+        }
+
+        td, th {
+            display: block;
+            width: 100%;
+            font-size: 100%
+        }
+
+        a {
+            font-size: 100%;
+        }
+
+<!--        .navbar-fixed-top.scrolled {-->
+<!--          background-color: #fff !important;-->
+<!--          transition: background-color 10000ms linear;-->
+<!--        }-->
     }
-
-
 </style>
 
 <body>
@@ -345,8 +367,6 @@
         $('html, body').animate({scrollTop: $(this.hash).offset().top - 50}, 1000);
         return false;
     });
-
-
 </script>
 
 <script>
@@ -358,8 +378,6 @@
     window.onbeforeunload = function (e) {
         localStorage.setItem('scrollpos', window.scrollY);
     };
-
-
 </script>
 
 <script>
@@ -376,6 +394,13 @@
         ],
         });
     });
+</script>
 
-
+<script>
+    $(function () {
+        $(document).scroll(function () {
+            var $nav = $(".navbar-fixed-top");
+            $nav.toggleClass('scrolled', $(this).scrollTop() > $nav.height());
+        });
+    });
 </script>

@@ -4,19 +4,37 @@
 
 <style>
     p {
-        font-size: 115%;
+        font-size: 130%;
         text-align: justify;
+            word-break: break-all;
+    white-space: normal;
+
     }
 
     th {
-        font-size: 130%;
-        background-color: #1b6d85;
+        font-size: 150%;
+        background-color: #003c49;
         color: white;
         padding: 5px;
         text-align: center;
     }
 
+    a {
+        font-size: 130%;
+    }
+
+    @media only screen and (max-width: 600px) {
+    table {
+        width: 100%;
+    }
+
+    td {
+        display: block;
+        width: 100%;
+    }
+}
 </style>
+
 <div class="container">
     <div class="container text-center" style="padding-top: 160px; padding-left: 0px">
         <div style="text-align: left">
@@ -24,8 +42,8 @@
         </div>
         <br>
     </div>
-
-    <table class="table">
+<div style="overflow-x:auto;">
+    <table class="table-responsive table">
         <tr>
             <th colspan="1" class="label_text">About</th>
         </tr>
@@ -74,10 +92,10 @@
                 <p>
                     Ługowska M and Pacholczyk M. PDBrt: A free database of complexes with measured drug-target residence
                     time [version 1; peer review: 1 approved with reservations]. F1000Research 2021, 10(Chem Inf Sci):1236
-                    (<a href="https://doi.org/10.12688/f1000research.73420.1" target="_tab">https://doi.org/10.12688/f1000research.73420.1</a>)
+                    (<a href="https://doi.org/10.12688/f1000research.73420.1" target="_tab" style="font-size: 110%">https://doi.org/10.12688/f1000research.73420.1</a>)
                 </p>
             </td>
         </tr>
-    </table>
+    </table></div>
 </div>
 {% endblock %}
