@@ -39,6 +39,7 @@
         background-color: #888;
     }
 
+
 </style>
 <head>
     <meta charset="UTF-8">
@@ -69,30 +70,30 @@
         <div id="navbar2" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">download
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Download
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'molecules:complex-export-data' %}">complex text data</a></li>
-                        <li><a href="{% url 'molecules:complex-download-zip' 'all' %}">complex files</a></li>
+                        <li><a href="{% url 'molecules:complex-export-data' %}">Text files</a></li>
+                        <li><a href="{% url 'molecules:complex-download-zip' 'all' %}">Data (pdb/sdf) files</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">help
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'help:get_started' %}">get started</a></li>
-                        <li><a href="{% url 'help:how_to_search' %}">how to search</a></li>
-                        <li><a href="{% url 'help:explore_entry' %}">explore PDBrt entry</a></li>
+                        <li><a href="{% url 'help:get_started' %}">Get started</a></li>
+                        <li><a href="{% url 'help:how_to_search' %}">How to search?</a></li>
+                        <li><a href="{% url 'help:explore_entry' %}">Explore PDBrt entry</a></li>
                     </ul>
                 </li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'molecules:complex-add' %}">add </a></li>
-                <li><a href="{% url 'molecules:complex-import-data' %}">upload excel file</a></li>
+                <li><a href="{% url 'molecules:complex-add' %}">Add </a></li>
+                <li><a href="{% url 'molecules:complex-import-data' %}">Upload xlsx file</a></li>
                 <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
                     Logout {{ user.username }}</a></li>
                 {% else %}
                 <li><a href="{% url 'users:login' %}"><span
-                        class="glyphicon glyphicon-log-in"></span> login</a></li>
+                        class="glyphicon glyphicon-log-in"></span> Login</a></li>
                 {% endif %}
             </ul>
         </div>

@@ -36,14 +36,9 @@
         background-position: center;
     }
 
-    {#section#main {#}
-    {#    margin: 30px;#}
-    {
-    #}#}
-
     @font-face {
         font-family: Barlow SCK;
-        src: url("/assets/barlow/BarlowSemiCondensed-Light.otf")
+        src: url("/assets/barlow/BarlowSemiCondensed-ExtraLight.otf")
     }
 
     html * {
@@ -123,7 +118,7 @@
     }
 
     button[type=submit] {
-        background-color: #1b6d85;
+        background-color: #003c49;
         color: white;
         height: 60px;
         margin-bottom: 3em;
@@ -144,6 +139,11 @@
         cursor: pointer;
     }
 
+    button[type=submit]:hover {
+        background-color: #057496;
+        color: white;
+    }
+
     table {
         border-collapse: collapse;
         border-spacing: 0;
@@ -152,7 +152,8 @@
 
     th, td {
         text-align: left;
-        padding: 8px;
+        padding: 10px;
+        font-size: 130%;
     }
 
     tr:nth-child(even) {
@@ -160,7 +161,7 @@
     }
 
     a#scroll:link, a#scroll:visited {
-        background-color: #1b6d85;
+        background-color: #003c49;
         color: white;
         padding: 15px 32px;
         text-align: center;
@@ -168,12 +169,12 @@
         text-decoration: none;
         display: inline-block;
         margin: 4px 2px;
+        border-radius: 5px;
     }
 
     a#scroll:hover, a#scroll:active {
         background-color: #057496;
     }
-
 
     @media only screen and (max-width: 600px) {
         h1 {
@@ -215,6 +216,7 @@
         }
     }
 
+
 </style>
 
 <body>
@@ -235,10 +237,10 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
-                           style="color: #f8f8f8; background-color: transparent">download files
+                           style="color: #f8f8f8; background-color: transparent">Download all data
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{% url 'molecules:complex-export-data' %}" style="color: #f8f8f8">text
+                            <li><a href="{% url 'molecules:complex-export-data' %}" style="color: #f8f8f8">Text
                                 format</a></li>
                             <li><a href="{% url 'molecules:complex-download-zip' 'all' %}" style="color: #f8f8f8">PDB/SDF
                                 format
@@ -247,24 +249,25 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"
-                           style="color: #f8f8f8; background-color: transparent">help
+                           style="color: #f8f8f8; background-color: transparent">Help
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="{% url 'help:get_started' %}" style="color: #f8f8f8">get started</a></li>
-                            <li><a href="{% url 'help:how_to_search' %}" style="color: #f8f8f8">how to search</a></li>
-                            <li><a href="{% url 'help:explore_entry' %}" style="color: #f8f8f8">explore PDBrt entry</a></li>
+                            <li><a href="{% url 'help:get_started' %}" style="color: #f8f8f8">Get started</a></li>
+                            <li><a href="{% url 'help:how_to_search' %}" style="color: #f8f8f8">How to search?</a></li>
+                            <li><a href="{% url 'help:explore_entry' %}" style="color: #f8f8f8">Explore PDBrt entry</a>
+                            </li>
                         </ul>
                     </li>
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'molecules:complex-add' %}" style="color: #f8f8f8">add </a></li>
-                    <li><a href="{% url 'molecules:complex-import-data' %}" style="color: #f8f8f8">upload excel
-                        file</a></li>
+                    <li><a href="{% url 'molecules:complex-add' %}" style="color: #f8f8f8">Add </a></li>
+                    <li><a href="{% url 'molecules:complex-import-data' %}" style="color: #f8f8f8">Upload xlsx file</a>
+                    </li>
                     <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"
                                                                  style="color: #f8f8f8"></span>
                         Logout {{ user.username }}</a></li>
                     {% else %}
                     <li><a href="{% url 'users:login' %}" style="color: #f8f8f8"><span
-                            class="glyphicon glyphicon-log-in"></span> login</a></li>
+                            class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -274,10 +277,10 @@
     <header>
         <h1>PDBrt Database</h1>
         <p style="margin-bottom: 3em">a free database of complexes with measured drug-target residence time</p>
-        <p id="explore">Explore the PDBrt archive</p>
+        <p id="explore">Find your protein-ligand structure</p>
         <form class="form-inline" action="{% url 'molecules:complex-list' %}" method="get" accept-charset="utf-8">
             <input class="form-control" name="search" type="text"
-                   placeholder="search by PDB ID, residence time, protein and ligand name" size="60">
+                   placeholder="search by PDB ID, residence time, protein or ligand name" size="60">
             <button class="btn btn-outline-success  my-2 my-sm-0" type="submit"
                     onClick="document.getElementById('main').scrollIntoView();"><b>GO</b></button>
         </form>
@@ -292,10 +295,10 @@
         <table id="example" class="table-responsive table table-hover">
             <thead>
             <tr>
-                <th style="font-size: 130%; background-color: #1b6d85; color: white">PDB ID</th>
-                <th style="font-size: 130%; background-color: #1b6d85; color: white">protein</th>
-                <th style="font-size: 130%; background-color: #1b6d85; color: white">ligand</th>
-                <th style="font-size: 130%; background-color: #1b6d85; color: white">residence
+                <th style="font-size: 130%; background-color: #003c49; color: white">PDB ID</th>
+                <th style="font-size: 130%; background-color: #003c49; color: white">Protein</th>
+                <th style="font-size: 130%; background-color: #003c49; color: white">Ligand</th>
+                <th style="font-size: 130%; background-color: #003c49; color: white">Residence
                     time [min]
                 </th>
             </tr>
@@ -303,7 +306,7 @@
             <tbody>
             {% for object in object_list %}
             <tr>
-                <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}">{{ object.pdb_id }}</a>
+                <td><a href="{% url 'molecules:complex-detail' object.pdb_id %}" style="font-size: 130%;">{{ object.pdb_id }}</a>
                 </td>
                 <td>{{ object.protein_name }}</td>
                 <td>{{ object.ligand_name }}</td>
@@ -330,7 +333,7 @@
 
 <footer>
     <div class="footer-copyright">
-        <p id="footer">©2020 pdbrt.polsl.pl. All rights reserved </p>
+        <p id="footer">©2021 pdbrt.polsl.pl. All rights reserved. </p>
     </div>
 </footer>
 
@@ -343,19 +346,8 @@
         return false;
     });
 
-</script>
 
-{#
-<script>#}
-{#    function goDown() {#}
-{#        window.scrollTo({#}
-{#            top: 100000,#}
-{#            left: 100000,#}
-{#            behavior: 'smooth'#}
-{#        });#}
-{#    }#}
-{#
-</script>#}
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function (event) {
@@ -367,6 +359,7 @@
         localStorage.setItem('scrollpos', window.scrollY);
     };
 
+
 </script>
 
 <script>
@@ -375,8 +368,14 @@
             "paging": true,
             "ordering": true,
             "info": true,
-            "searching": false
+            "searching": false,
+            "hover": true,
+            lengthMenu: [
+            [5, 10, 25, 50, -1],
+            [5, 10, 25, 50, 'All'],
+        ],
         });
     });
+
 
 </script>
