@@ -16,9 +16,25 @@
         text-align: center;
     }
 
+    .headline {
+        font-size: 130%;
+        background-color: white;
+        color: #003c49;
+        text-align: center;
+        font-weight: 950;
+    }
+
     .responsive {
         max-width: 100%;
         height: auto;
+        max-height: 30%;
+    }
+
+    .center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
     }
 
     .bold {
@@ -49,7 +65,7 @@
         </div>
         <br>
     </div>
-
+<div style="overflow-x:auto;">
     <table class="table table-responsive">
         <tr>
             <th colspan="1" class="label_text">Explore Structure Detail Page</th>
@@ -57,21 +73,88 @@
 
         <tr>
             <td>
-                <p>The PDBrt database contains individual protein-ligand entries that provide detailed information about the binding kinetics as well as cross-links
-                    to many external resources for macromolecular structure data.<p>
+                <p>The PDBrt database contains individual protein-ligand entries that provide detailed information about
+                    the binding kinetics as well as cross-links
+                    to many external resources for macromolecular structure data.
+                <p>
+
                 <br>
                 <p><span class="bold">Download Option</span></p>
-                <p>At the top of the page you can download zipped complex data in pdb (for complex and protein)/sdf (for ligand) format. </p>
+                <p>At the top of the page you can download zipped complex data in pdb (for complex and protein)/sdf (for
+                    ligand) format. </p>
                 <br>
-                <img src="/assets/download-single-complex-help.png" alt="" class="responsive">
+                <img src="/assets/download-single-complex-help-1.png" alt="" class="responsive">
 
-                <br><br>
+                <br>
+                <br>
                 <p><span class="bold">3D View</span></p>
-                <p>Each Structure Detail page has specific sections that present different types of information about the structure. On the left you can find a 3D visualization of the complex.
-                    By default # https://www.rcsb.org/docs/exploring-a-3d-structure/structure-summary-page
-                </p>
+                <p>Each Structure Detail page has specific sections that present different types of information about
+                    the structure.
+                    On the top left, under the Structure PDB ID, snapshot box provides a quick glimpse of what the
+                    contents of the entry look like.
+                    Each protein chain instance is assigned a unique color and presented in the cartoon representation
+                    by default.
+                    Ligands are shown in ball-and-stick representations.</p>
+                <img src="/assets/3dview1.png" alt="" class="responsive center">
+                <p>Click on the hyperlinked words below the snapshots to view the structure interactively in 3Dmol in
+                    different representation:
+                    line, stick, cross, cartoon or surface. To remove surface representation click on the "remove
+                    surface" button.</p>
+
+                <br>
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Stick</p>
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Line</p>
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Cross</p>
+                </div>
             </td>
         </tr>
+        <tr>
+            <td style="border: None">
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-stick.png" alt="" class="responsive center" style="width:100%">
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-line.png" alt="" class="responsive center" style="width:100%">
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-cross.png" alt="" class="responsive center" style="width:100%">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: None">
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Cartoon</p>
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Surface</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: None">
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-cartoon.png" alt="" class="responsive center" style="width:100%">
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-surface.png" alt="" class="responsive center" style="width:100%">
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="border: None">
+            <br>
+                <p><span class="bold">Learning about the structure</span></p>
+            </td>
+        </tr>
+
     </table>
+</div>
 </div>
 {% endblock %}
