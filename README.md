@@ -1,4 +1,4 @@
-# The Protein Data Bank residence time ([PDBrt](https://pdbrt.polsl.pl/)) database
+# The residence time ([PDBrt](https://pdbrt.polsl.pl/)) database
 
 The [PDBrt](https://pdbrt.polsl.pl/) database is a free, non-commercial repository for 3D protein-ligand complex data, including 
 the measured ligand residence time inside the binding pocket of the specific biological macromolecules as deposited in The Protein Data Bank. The PDBrt database contains information about both the protein and the ligand separately, as well as the protein-ligand complex, binding kinetics, and time of the ligand residence inside the protein binding site.
