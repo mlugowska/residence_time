@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('molecules.urls', namespace='molecules')),
     path('user/', include('users.urls', namespace='users')),
+    path('help/', include('help.urls', namespace='help')),
 ]

@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    p {
+        font-size: 130%;
+        text-align: justify;
+    }
+
+    th {
+        font-size: 150%;
+        background-color: #003c49;
+        color: white;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .headline {
+        font-size: 130%;
+        background-color: white;
+        color: #003c49;
+        text-align: center;
+        font-weight: 950;
+    }
+
+    .responsive {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+
+    .bold {
+        font-weight: 950;
+        font-size: 150%;
+    }
+
+    a {
+        font-size: 130%;
+    }
+
+    @media only screen and (max-width: 600px) {
+    table {
+        width: 100%;
+    }
+
+    td, th {
+        display: block;
+        width: 100%;
+    }
+}
+</style>
+
+<div class="container">
+    <div class="container text-center" style="padding-top: 160px; padding-left: 0px">
+        <div style="text-align: left">
+            <a href="javascript:history.go(-1)" class="previous">&laquo; back</a>
+        </div>
+        <br>
+    </div>
+<div style="overflow-x:auto;">
+    <table class="table table-responsive">
+        <tr>
+            <th colspan="1" class="label_text">Explore Structure Detail Page</th>
+        </tr>
+
+        <tr>
+            <td>
+                <p>
+                    The PDBrt database contains individual protein-ligand entries that provide detailed information
+                    about the binding kinetics as well as cross-links to many external resources for macromolecular
+                    structure data.
+                </p>
+
+                <br>
+                <p><span class="bold">Download Option</span></p>
+                <p>
+                    At the top of the page you can download zipped complex data in pdb (for complex and protein)/sdf
+                    (for ligand) format.
+                </p>
+                <br>
+                <img src="/assets/download-single-complex-help-1.png" alt="" class="responsive">
+
+                <br>
+                <br>
+                <p><span class="bold">3D View</span></p>
+                <p>
+                    Each Structure Detail page has specific sections that present different types of information about
+                    the structure. On the top left, under the Structure PDB ID, the snapshot box provides a quick
+                    glimpse of what the contents of the entry look like. Each protein chain instance is assigned a
+                    unique color and presented in the cartoon representation by default. Ligands are shown in
+                    ball-and-stick representations.
+                </p>
+                <img src="/assets/3dview1.png" alt="" class="responsive center">
+                <p>
+                    Click on the hyperlinked words below the snapshots to view the structure interactively in 3Dmol in
+                    different representations: line, stick, cross, cartoon or surface. To remove surface representation
+                    click on the "remove surface" button.
+                </p>
+
+                <br>
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Stick</p>
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Line</p>
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Cross</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: None">
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-stick.png" alt="" class="responsive center" style="width:100%">
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-line.png" alt="" class="responsive center" style="width:100%">
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-cross.png" alt="" class="responsive center" style="width:100%">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: None">
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Cartoon</p>
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <p class="headline">Surface</p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="border: None">
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-cartoon.png" alt="" class="responsive center" style="width:100%">
+                </div>
+                <div style="display: inline-block; width: 30%">
+                    <img src="/assets/3d-surface.png" alt="" class="responsive center" style="width:100%">
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="border: None">
+            <br>
+                <p><span class="bold">Learning about the structure</span></p>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="border: None">
+                <p>On the right of the page, you can see:</p>
+                <p>
+                    - the PDBrt entry information: PDB ID, protein and ligand name, residence time and primary
+                    reference. You can click on hyperlinked words to either download a structure file in pdb format
+                    (for complex and protein only) or sdf (for ligand) or go to primary reference in Pubmed.
+                </p>
+                <p>
+                    - additional parameters: the inhibitory constant (K<sub>i</sub>), the association rate constant
+                    (k<sub>on</sub>) and the dissociation rate constant (k<sub>off</sub>)
+                </p>
+                <p>
+                    - ligand properties: formula, canonical SMILES and InChi
+                </p>
+                <p>
+                    - and links to external databases where the complex can be also found with additional information:
+                    RCSB PDB, PDBj, PDBe and PDBsum.
+                </p>
+                <img src="/assets/complex-detail-table.png" alt="" class="responsive">
+            </td>
+        </tr>
+
+        <tr>
+            <td style="border: None">
+                <br>
+                <p class="bold">For more help on how to use PDBrt contact us directly: magdalena.lugowska@polsl.pl.</p>
+            </td>
+        </tr>
+
+    </table>
+</div>
+</div>
+{% endblock %}

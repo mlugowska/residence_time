@@ -8,7 +8,7 @@
               enctype="multipart/form-data">{% csrf_token %}
             <p>Are you sure you want to delete "{{ object.pdb_id }}"?</p>
             <input type="submit" style="background-color: #1b6d85; color: white" value="confirm">
-            <button type="cancel" style="background-color: #1b6d85; color: white" onclick="window.location='{% url 'molecules:complex-list' %}';return false;">cancel
+            <button type="cancel" style="background-color: #1b6d85; color: white" onclick="window.location='{% url 'molecules:complex-list' %}';return false;">Cancel
             </button>
         </form>
     </center>

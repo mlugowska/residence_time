@@ -6,17 +6,17 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div style="text-align: left">
-                    <a href="javascript:history.go(-1)" class="previous">&laquo; Back</a></div>
-                <p style="font-size: 130%">please select format of file</p>
+                    <a href="javascript:history.go(-1)" class="previous">&laquo; back</a></div>
+                <p style="font-size: 150%">Please select format of file</p>
                 <select name="file-format" class="form-control center-block" style="width: 200px">
-                    <option selected>choose format...</option>
+                    <option selected>Choose format...</option>
                     <option>CSV</option>
                     <option>JSON</option>
                     <option>XLSX (Excel)</option>
                 </select>
                 <button class="btn btn-primary" type="submit"
-                        style="background-color: #1b6d85; color: white; width: 200px; margin: 20px; padding: 10px">
-                    export
+                        style="background-color: #1b6d85; color: white; width: 200px; margin: 20px; padding: 10px; font-size: 150%">
+                    Export
                 </button>
             </form>
 

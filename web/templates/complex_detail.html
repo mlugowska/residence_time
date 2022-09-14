@@ -1,6 +1,5 @@
 {% load rest_framework %}
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,19 +32,19 @@
         padding-bottom: 60px
     }
 
-    .table {
-        width: 100%;
-        margin-top: 20px;
-        margin-left: 10px;
-    }
+<!--    .table {-->
+<!--        width: 100%;-->
+<!--        margin-top: auto;-->
+<!--        margin-left: auto;-->
+<!--    }-->
 
     @font-face {
-        font-family: Akrobat;
-        src: url("/assets/Akrobat-Thin.otf")
+        font-family: Barlow SCK;
+        src: url("/assets/barlow/BarlowSemiCondensed-ExtraLight.otf")
     }
 
     html * {
-        font-family: Akrobat;
+        font-family: Barlow SCK;
         font-size: large;
     }
 
@@ -71,6 +70,30 @@
         background-color: #888; /*Background color for bar in the holder*/
     }
 
+    td {
+        font-size: 130%;
+    }
+
+    td:first-child {
+        border-left: none;
+    }
+
+    @media only screen and (max-width: 600px) {
+        table {
+            width: 100%;
+        }
+
+        td {
+            display: block;
+            width: 100%;
+        }
+
+        tr {
+            display: block;
+            margin-bottom: 30px;
+        }
+    }
+
 </style>
 <body>
 <nav class="navbar navbar-nav navbar-default navbar-fixed-top">
@@ -88,21 +111,31 @@
         <div id="navbar2" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">download
-                        files
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="font-size: 130%">Download complex data
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{% url 'molecules:complex-download-zip' object.pdb_id %}">PDB/SDF format</a></li>
+                        <li><a href="{% url 'molecules:complex-download-zip' object.pdb_id %}" style="font-size: 130%">PDB/SDF format</a></li>
                     </ul>
                 </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="font-size: 130%">Help
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{% url 'help:get_started' %}" style="font-size: 130%">Getting started</a></li>
+                        <li><a href="{% url 'help:how_to_search' %}" style="font-size: 130%">How to search?</a></li>
+                        <li><a href="{% url 'help:explore_entry' %}" style="font-size: 130%">Explore PDBrt entry</a></li>
+                    </ul>
+                </li>
+
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'molecules:complex-add' %}">add </a></li>
-                    <li><a href="{% url 'molecules:complex-import-data' %}">upload excel file</a></li>
-                    <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
-                        Logout {{ user.username }}</a></li>
+                <li><a href="{% url 'molecules:complex-add' %}" style="font-size: 130%">Add </a></li>
+                <li><a href="{% url 'molecules:complex-import-data' %}" style="font-size: 130%">Upload xlsx file</a></li>
+                <li><a href="{% url 'users:logout' %}"><span class="glyphicon glyphicon-off"></span>
+                    Logout {{ user.username }}</a></li>
                 {% else %}
-                    <li><a href="{% url 'users:login' %}"><span
-                            class="glyphicon glyphicon-log-in"></span> login</a></li>
+                <li><a href="{% url 'users:login' %}" style="font-size: 130%"><span
+                        class="glyphicon glyphicon-log-in"></span> Login</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -113,8 +146,8 @@
     <div class="row col-lg-12">
         <div class="col-lg-4 col-lg-offset-2 text-center" style="background-color: white">
             <div style="text-align: left">
-                <a href="javascript:history.back()" class="previous">&laquo; back</a></div>
-            <h2 style="font-size: 400%">{{ object.pdb_id }}</h2>
+                <a href="javascript:history.back()" class="previous" style="font-size: 130%">&laquo; back</a></div>
+            <h2 style="font-size: 500%">{{ object.pdb_id }}</h2>
             <div id="gldiv" class=" mol-container"></div>
             <br>
             <input type="button" value="stick" style="background-color: black; color: white;"
@@ -137,128 +170,130 @@
                 <table class="table">
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 130%; background-color: #1b6d85; color: white">entry
+                            style="font-size: 150%; background-color: #003c49; color: white">Entry
                             information
                         </th>
                     </tr>
                     <tr>
                         <td>PDB ID</td>
                         <td>
-                            <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}">{{ object.pdb_id }}</a>
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'complex' %}" style="font-size: 120%">{{ object.pdb_id }}</a>
                         </td>
                     </tr>
                     <tr>
-                        <td>protein name</td>
+                        <td>Protein name</td>
                         <td>
                             {% if object.protein.name %}
-                                <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}">{{ object.protein.name }}</a>
-                                </td>
-                            {% else %}
-                                <td>n/a</td>
-                            {% endif %}
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'protein' %}" style="font-size: 120%">{{ object.protein.name }}</a>
+                        </td>
+                        {% else %}
+                        <td>n/a</td>
+                        {% endif %}
 
                     </tr>
                     <tr>
-                        <td>ligand name</td>
+                        <td>Ligand name</td>
                         <td>
                             {% if object.ligand.name %}
-                                <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}">{{ object.ligand.name }}</a>
-                                </td>
-                            {% else %}
-                                <td>n/a</td>
-                            {% endif %}
+                            <a href="{% url 'molecules:complex-download' object.pdb_id 'ligand' %}" style="font-size: 120%">{{ object.ligand.name }}</a>
+                        </td>
+                        {% else %}
+                        <td>n/a</td>
+                        {% endif %}
 
                     </tr>
                     <tr>
-                        <td>residence time [min]</td>
+                        <td>Residence time [min]</td>
                         {% if object.residence_time > 0.0 %}
-                            {% if object.residence_time_plus_minus > 0.0 %}
-                                {% if object.is_calculated_from_koff == 'yes' %}
-                                    <td>{{ object.residence_time|floatformat:2 }}
-                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }} *calculated from
-                                        k<sub>off</sub></td>
-                                {% else %}
-                                    <td>{{ object.residence_time|floatformat:2 }}
-                                        &#177 {{ object.residence_time_plus_minus|floatformat:2 }} </td>
-                                {% endif %}
-                            {% else %}
-                                {% if object.is_calculated_from_koff == 'yes' %}
-                                    <td>{{ object.residence_time|floatformat:2 }} *calculated from k<sub>off</sub></td>
-                                {% else %}
-                                    <td>{{ object.residence_time|floatformat:2 }}</td>
-                                {% endif %}
-                            {% endif %}
+                        {% if object.residence_time_plus_minus > 0.0 %}
+                        {% if object.is_calculated_from_koff == 'yes' %}
+                        <td>{{ object.residence_time|floatformat:2 }}
+                            &#177 {{ object.residence_time_plus_minus|floatformat:2 }} *calculated from
+                            k<sub>off</sub></td>
                         {% else %}
-                            <td>n/a</td>
+                        <td>{{ object.residence_time|floatformat:2 }}
+                            &#177 {{ object.residence_time_plus_minus|floatformat:2 }}
+                        </td>
+                        {% endif %}
+                        {% else %}
+                        {% if object.is_calculated_from_koff == 'yes' %}
+                        <td>{{ object.residence_time|floatformat:2 }} *calculated from k<sub>off</sub></td>
+                        {% else %}
+                        <td>{{ object.residence_time|floatformat:2 }}</td>
+                        {% endif %}
+                        {% endif %}
+                        {% else %}
+                        <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
-                        <td>primary reference</td>
+                        <td>Primary reference</td>
                         {% if object.primary_reference %}
-                            <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term={{ object.pubmed_id }}"
-                                   target="_tab">{{ object.primary_reference }}</a></td>
+                        <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term={{ object.pubmed_id }}"
+                               target="_tab" style="font-size: 120%">{{ object.primary_reference }}</a></td>
                         {% else %}
-                            <td>to be published</td>
+                        <td>to be published</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 130%; background-color: #1b6d85; color: white">additional
+                            style="font-size: 150%; background-color: #003c49; color: white">Additional
                             parameters
                         </th>
                     </tr>
                     <tr>
                         <td>K<sub>i</sub> [nM]</td>
                         {% if object.ki > 0.0 %}
-                            {% if object.ki_plus_minus > 0.0 %}
-                                <td>{{ object.ki|floatformat:3 }} &#177 {{ object.ki_plus_minus|floatformat:3}}</td>
-                            {% else %}
-                                <td>{{ object.ki|floatformat:3 }}</td>
-                            {% endif %}
+                        {% if object.ki_plus_minus > 0.0 %}
+                        <td>{{ object.ki|floatformat:3 }} &#177 {{ object.ki_plus_minus|floatformat:3}}</td>
                         {% else %}
-                            <td>n/a</td>
+                        <td>{{ object.ki|floatformat:3 }}</td>
+                        {% endif %}
+                        {% else %}
+                        <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <td>k<sub>on</sub> [min<sup>-1</sup>M<sup>-1</sup>]</td>
                         {% if object.kon > 0.0 %}
-                            {% if object.kon_plus_minus > 0.0 %}
-                                <td>{{ object.kon }} &#177 {{ object.kon_plus_minus|floatformat:2 }} &times
-                                    10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup></td>
-                            {% else %}
-                                <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup>
-                                </td>
-                            {% endif %}
+                        {% if object.kon_plus_minus > 0.0 %}
+                        <td>{{ object.kon }} &#177 {{ object.kon_plus_minus|floatformat:2 }} &times
+                            10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup></td>
                         {% else %}
-                            <td>n/a</td>
+                        <td>{{ object.kon }} &times 10<sup>{{ object.kon_ten_to_power|floatformat:0 }}</sup>
+                        </td>
+                        {% endif %}
+                        {% else %}
+                        <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <td>k<sub>off</sub> [min<sup>-1</sup>]</td>
                         {% if object.koff > 0.000 %}
-                            {% if object.koff_plus_minus > 0.000 %}
-                                <td>{{ object.koff|floatformat:4 }}
-                                    &#177 {{ object.koff_plus_minus|floatformat:4 }}</td>
-                            {% else %}
-                                <td>{{ object.koff|floatformat:4 }}</td>
-                            {% endif %}
+                        {% if object.koff_plus_minus > 0.000 %}
+                        <td>{{ object.koff|floatformat:4 }}
+                            &#177 {{ object.koff_plus_minus|floatformat:4 }}
+                        </td>
                         {% else %}
-                            <td>n/a</td>
+                        <td>{{ object.koff|floatformat:4 }}</td>
+                        {% endif %}
+                        {% else %}
+                        <td>n/a</td>
                         {% endif %}
                     </tr>
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 130%; background-color: #1b6d85; color: white">ligand
+                            style="font-size: 150%; background-color: #003c49; color: white">Ligand
                             properties
                         </th>
                     </tr>
                     <tr>
-                        <td>formula</td>
+                        <td>Formula</td>
                         <td>{{ object.ligand.formula }}</td>
 
                     </tr>
                     <tr>
-                        <td>canonical SMILES</td>
+                        <td>Canonical SMILES</td>
                         <td>{{ object.ligand.smiles }}</td>
                     </tr>
                     <tr>
@@ -267,29 +302,29 @@
                     </tr>
                     <tr>
                         <th colspan="2" class="label_text"
-                            style="font-size: 130%; background-color: #1b6d85; color: white">external databases
+                            style="font-size: 150%; background-color: #003c49; color: white">External databases
                         </th>
                     </tr>
                     <tr>
-                        <td><a href="https://www.rcsb.org/structure/{{ object.pdb_id }}" target="_blank">RCSB PDB</a>
+                        <td><a href="https://www.rcsb.org/structure/{{ object.pdb_id }}" target="_blank" style="font-size: 120%">RCSB PDB</a>
                         </td>
                         <td>The Protein Data Bank</td>
                     </tr>
                     <tr>
                         <td>
-                            <a href="https://pdbj.org/mine/summary/{{ object.pdb_id }}" target="_blank">PDBj</a></td>
+                            <a href="https://pdbj.org/mine/summary/{{ object.pdb_id }}" target="_blank" style="font-size: 120%">PDBj</a></td>
                         <td>The Protein Data Bank Japan</td>
                     </tr>
                     <tr>
                         <td>
-                            <a href="https://www.ebi.ac.uk/pdbe/entry/pdb/{{ object.pdb_id }}" target="_blank">PDBe</a>
+                            <a href="https://www.ebi.ac.uk/pdbe/entry/pdb/{{ object.pdb_id }}" target="_blank" style="font-size: 120%">PDBe</a>
                         </td>
                         <td>The Protein Data Bank in Europe</td>
                     </tr>
                     <tr>
                         <td>
                             <a href="http://www.ebi.ac.uk/thornton-srv/databases/cgi-bin/pdbsum/GetPage.pl?pdbcode={{ object.pdb_id }}"
-                               target="_blank">PDBsum</a></td>
+                               target="_blank" style="font-size: 120%">PDBsum</a></td>
                         <td>Enhanced annotations on PDB entries</td>
                     </tr>
                 </table>
@@ -414,4 +449,5 @@
         });
 
     });
+
 </script>

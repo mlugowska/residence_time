@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    p {
+        font-size: 130%;
+        text-align: justify;
+    }
+
+    th {
+        font-size: 150%;
+        background-color: #003c49;
+        color: white;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .responsive {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .bold {
+        font-weight: 950;
+        font-size: 150%;
+    }
+
+    b {
+        font-weight: 950;
+        font-size: 100%;
+    }
+
+    a {
+        font-size: 130%;
+    }
+
+    @media only screen and (max-width: 600px) {
+    table {
+        width: 100%;
+    }
+
+    td {
+        display: block;
+        width: 100%;
+    }
+}
+</style>
+
+<div class="container">
+    <div class="container text-center" style="padding-top: 160px; padding-left: 0px">
+        <div style="text-align: left">
+            <a href="javascript:history.go(-1)" class="previous">&laquo; back</a>
+        </div>
+        <br>
+    </div>
+
+    <table class="table table-responsive">
+        <tr>
+            <th colspan="1" class="label_text">Find your data</th>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    The PDBrt website provides the option to freely search, explore and view structures with known
+                    residence time. On the homepage you start with some general information about all available
+                    structures in tabular format, and have the possibility to download whole sets of data files for
+                    result sets consisting of multiple PDBrt entries.
+                </p>
+                <br>
+                <p><span class="bold">Search Options</span></p>
+                <p>
+                    Specific information about the molecule(s) of interest can be used to query the 3D structure
+                    archive via basic search. Basic search can be run from the homepage by simply typing a search term
+                    (PDB ID, protein or ligand name, residence time) into the Search Bar in the middle of the page.
+                </p>
+                <p>
+                    If you wish to view the entire contents of the database, just click on the "go to all complexes"
+                    button below the Search Bar.
+                </p>
+                <img src="/assets/how-to-search.png" alt="" class="responsive">
+                <br>
+                <br>
+                <br>
+                <p><span class="bold">Query Results</span></p>
+                <p>
+                    Once a search query has been executed using the Search Bar or "go to all complexes" button clicked,
+                    you will be taken down the page to the table with the results list. The results show information
+                    such as PDB ID, protein name, ligand name and residence time in minutes. Once a structure of
+                    interest has been identified you can examine it in detail and/or download structure related files
+                    for exploration and analysis. <b>Just click on related PDB ID.</b> Each structure in the Search
+                    Results table opens a Structure Detail page which provides detailed information about binding
+                    kinetics.
+                </p>
+                <img src="/assets/search-results-table.png" alt="" class="responsive">
+            </td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

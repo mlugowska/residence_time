@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    p {
+        font-size: 130%;
+        text-align: justify;
+        word-break: break-all;
+        white-space: normal;
+    }
+
+    th {
+        font-size: 150%;
+        background-color: #003c49;
+        color: white;
+        padding: 5px;
+        text-align: center;
+    }
+
+    a {
+        font-size: 130%;
+    }
+
+    @media only screen and (max-width: 600px) {
+    table {
+        width: 100%;
+    }
+
+    td {
+        display: block;
+        width: 100%;
+    }
+}
+</style>
+
+<div class="container">
+    <div class="container text-center" style="padding-top: 160px; padding-left: 0px">
+        <div style="text-align: left">
+            <a href="javascript:history.go(-1)" class="previous">&laquo; back</a>
+        </div>
+        <br>
+    </div>
+<div style="overflow-x:auto;">
+    <table class="table-responsive table">
+        <tr>
+            <th colspan="1" class="label_text">About</th>
+        </tr>
+        <tr>
+            <td>
+                <p>
+                    The residence time (PDBrt) database is a free, non-commercial repository for 3D protein-ligand
+                    complex data, including the measured ligand residence time inside the binding pocket of the specific
+                    biological macromolecules as deposited in The Protein Data Bank. The PDBrt database contains
+                    information about both the protein and the ligand separately, as well as the protein-ligand complex,
+                    binding kinetics, and time of the ligand residence inside the protein binding site.
+
+                </p>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="border: None">
+                <p>
+                    The data include information on protein-ligand binding kinetics from the available literature
+                    extracted by reviewing the primary reference of each pdb file in the Research Collaboratory for
+                    Structural Bioinformatics (RCSB) Protein Data Bank (PDB) to retrieve the experimentally measured
+                    ligand-target residence time or dissociation rate. Only complexes with known ligand-target residence
+                    time or dissociation rate were added to the final PDBrt dataset.
+                </p>
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="1" class="label_text">Availability</th>
+        </tr>
+
+        <tr>
+            <td style="border: None">
+                <p>
+                    PDBrt is available to the community through its web-based interface only.
+                    New data can be added by the authors (database administrators) either by uploading an xlsx (MS
+                    Excel) file or manually.</p>
+            </td>
+        </tr>
+
+        <tr>
+            <th colspan="1" class="label_text">How to cite us?</th>
+        </tr>
+
+        <tr>
+            <td style="border: None">
+                <p>
+                    Ługowska M and Pacholczyk M. PDBrt: A free database of complexes with measured drug-target residence
+                    time [version 1; peer review: 1 approved with reservations]. F1000Research 2021, 10(Chem Inf Sci):1236
+                    (<a href="https://doi.org/10.12688/f1000research.73420.1" target="_tab" style="font-size: 110%">https://doi.org/10.12688/f1000research.73420.1</a>)
+                </p>
+            </td>
+        </tr>
+    </table></div>
+</div>
+{% endblock %}
