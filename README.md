@@ -48,7 +48,7 @@ Datatable consists of the following columns:
 16. Kon Plus Minus	
 17. Kon 10^	
 18. Koff	
-19, Koff Plus Minus	
+19. Koff Plus Minus	
 20. Primary Reference	
 21. PubMed ID	
 22. is calculated from koff		
