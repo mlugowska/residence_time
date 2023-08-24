@@ -7,7 +7,7 @@ pandas
 numpy==1.17.4
 tablib
 biopython
-uwsgi==2.0.15
+uwsgi==2.0.22
 ipython
 xlrd==1.2.0
 xlwt
